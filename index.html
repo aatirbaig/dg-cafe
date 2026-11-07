@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DG Cafe · Chiplun</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400&family=Inter:wght@400;500;600&family=Montserrat:wght@500;600&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#08080a;--bg2:#101013;--card:#151519;--line:rgba(244,241,236,.11);--cream:#f4f1ec;--muted:#9b968e;--amber:#f7941d;--amber2:#ffb357;--blue:#3d7bff;--green:#7fc49a}
+*{box-sizing:border-box;margin:0;padding:0}
+html.lenis{height:auto}.lenis.lenis-smooth{scroll-behavior:auto}
+body{background:var(--bg);color:var(--cream);font-family:Inter,"Noto Sans Devanagari",system-ui,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;width:100%;height:100%;object-fit:cover}
+#gl{position:fixed;inset:0;width:100%;height:100%;z-index:3;pointer-events:none;transition:opacity .2s}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+main,nav,footer{position:relative;z-index:2}
+.wrap{max-width:1280px;margin:0 auto;padding:0 28px}
+.logo{width:44px;height:44px;border-radius:50%;background:#fff;border:3px solid var(--amber);color:#111;display:grid;place-content:center;text-align:center;font-family:Montserrat,sans-serif;font-weight:600;font-size:15px;line-height:.9;letter-spacing:-.5px;flex-shrink:0}
+.logo small{display:block;font-size:5.5px;letter-spacing:1px;font-weight:500;margin-top:2px}
+.logo.xl{width:120px;height:120px;border-width:6px;font-size:40px}.logo.xl small{font-size:13px;letter-spacing:3px;margin-top:5px}
+
+/* loader */
+#loader{position:fixed;inset:0;z-index:100;background:var(--bg);display:grid;place-items:center}
+#loader .bar{width:160px;height:2px;background:var(--line);margin:22px auto 0;overflow:hidden}
+#loader .bar i{display:block;height:100%;width:0;background:var(--amber)}
+
+/* nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.solid{background:rgba(8,8,10,.7);backdrop-filter:blur(16px);border-color:var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:80px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:15px}
+.links{display:flex;gap:32px;font-size:14px;color:var(--muted)}
+.links a{position:relative;transition:color .3s}.links a:hover{color:var(--cream)}
+.links a::after{content:"";position:absolute;left:0;bottom:-6px;height:1px;width:0;background:var(--amber);transition:width .35s}
+.links a:hover::after{width:100%}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:15px 26px;border-radius:99px;font-weight:600;font-size:14px;cursor:pointer;border:none;font-family:inherit;transition:transform .3s,background .3s,color .3s,border-color .3s}
+.btn.primary{background:var(--amber);color:#120a00}
+.btn.primary:hover{transform:translateY(-2px);background:var(--amber2)}
+.btn.ghost{border:1px solid var(--line);color:var(--cream);background:rgba(255,255,255,.03);backdrop-filter:blur(8px)}
+.btn.ghost:hover{border-color:var(--amber);color:var(--amber)}
+@media(max-width:900px){.links{display:none}}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;padding:118px 0 0;min-height:100vh;display:flex;flex-direction:column}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 78% 35%,rgba(247,148,29,.13),transparent 55%);pointer-events:none}
+.hgrid{display:grid;grid-template-columns:1fr 1.08fr;gap:64px;align-items:center;flex:1}
+.status{display:inline-flex;align-items:center;gap:10px;font-size:13px;padding:8px 14px 8px 12px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:#d8d2c9}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.status.on i{background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(127,196,154,.7)}70%{box-shadow:0 0 0 9px rgba(127,196,154,0)}100%{box-shadow:0 0 0 0 rgba(127,196,154,0)}}
+.status b{color:var(--cream);font-weight:600}.status em{font-style:normal}
+.hh1{font-family:Fraunces,serif;font-weight:600;font-size:clamp(40px,4.5vw,68px);line-height:1.02;letter-spacing:-.035em;margin:26px 0 22px}
+.hh1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
+.hh1 .ln>span{display:inline-block}
+.hh1 em{font-style:italic;font-weight:400;color:var(--amber)}
+.hlead{font-size:18px;line-height:1.65;color:#bdb6ac;max-width:500px}
+.hlead b{color:var(--cream);font-weight:500}
+.hcta{display:flex;gap:12px;margin-top:34px;flex-wrap:wrap}
+.btn.lg{padding:17px 28px;font-size:15px}
+.trust{display:flex;align-items:center;gap:22px;margin-top:38px;flex-wrap:wrap}
+.trust>div{display:flex;flex-direction:column;gap:3px}
+.trust b{font-size:17px;font-weight:600;display:flex;align-items:center;gap:6px}
+.trust b .st{color:var(--amber);font-size:14px;letter-spacing:1px}
+.trust span{font-size:12.5px;color:var(--muted)}
+.trust .sep{width:1px;height:34px;background:var(--line)}
+.visual{position:relative;height:min(68vh,620px);min-height:440px}
+.vphoto{position:absolute;inset:0 0 0 40px;border-radius:32px;overflow:hidden;box-shadow:0 50px 120px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.07)}
+.vphoto img{transform:scale(1.12)}
+.vphoto::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,8,10,0) 55%,rgba(8,8,10,.55))}
+.vtag{position:absolute;top:20px;left:62px;z-index:2;display:flex;align-items:center;gap:8px;font-size:12.5px;padding:8px 13px;border-radius:99px;background:rgba(8,8,10,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.14)}
+.vtag svg{width:14px;height:14px;stroke:var(--amber);fill:none;stroke-width:2}
+.best{position:absolute;right:-18px;bottom:44px;z-index:3;display:flex;gap:12px;align-items:center;padding:10px 16px 10px 10px;border-radius:20px;background:rgba(16,16,20,.78);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.12);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.best .th{width:58px;height:58px;border-radius:13px;overflow:hidden}
+.best small{font-size:10.5px;letter-spacing:1.6px;text-transform:uppercase;color:var(--amber)}
+.best b{display:block;font-family:Fraunces,serif;font-size:17px;font-weight:600;margin:2px 0}
+.best span{font-size:13px;color:var(--muted)}
+#cupAnchor{position:absolute;left:-40px;bottom:-34px;width:250px;height:250px;z-index:3;pointer-events:none}
+.hero>.wrap{width:100%;min-width:0}.hgrid>*{min-width:0}
+.crave{min-width:0;margin-top:56px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.crave>span{font-size:13px;color:var(--muted);letter-spacing:.3px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:9px;padding:9px 16px 9px 9px;border-radius:99px;border:1px solid var(--line);background:rgba(255,255,255,.03);font-size:14px;cursor:pointer;color:var(--cream);font-family:inherit;transition:all .3s}
+.chip i{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(247,148,29,.14);font-style:normal;font-size:15px}
+.chip:hover{border-color:var(--amber);background:rgba(247,148,29,.1);transform:translateY(-2px)}
+.infobar{margin-top:44px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line)}
+.ib{padding:22px 24px 26px 0;display:flex;gap:14px;align-items:flex-start}
+.ib+.ib{padding-left:24px;border-left:1px solid var(--line)}
+.ib svg{width:22px;height:22px;stroke:var(--amber);fill:none;stroke-width:1.7;flex-shrink:0;margin-top:2px}
+.ib small{display:block;font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.ib b{font-size:15px;font-weight:500;display:block}
+.ib a.lk{font-size:13px;color:var(--amber);margin-top:4px;display:inline-block}
+.ib a.lk:hover{text-decoration:underline}
+@media(max-width:1000px){.hero{padding-top:104px}.hgrid{grid-template-columns:1fr;gap:40px}.visual{height:420px;min-height:0}.vphoto{inset:0}.vtag{left:18px}.best{right:12px;bottom:auto;top:60px;padding:8px 12px 8px 8px}.best .th{width:44px;height:44px}.best b{font-size:15px}#cupAnchor{left:-14px;bottom:-30px;width:170px;height:170px}
+.infobar{grid-template-columns:1fr 1fr}.ib:nth-child(3){padding-left:0;border-left:none}.ib:nth-child(n+3){border-top:1px solid var(--line)}.crave{margin-top:44px}}
+@media(max-width:560px){.status .pl{display:none}.trust{gap:14px}.trust .sep{display:none}.hlead{font-size:16px}.chips{flex-wrap:nowrap;overflow-x:auto;margin:0 -28px;padding:0 28px 6px;scrollbar-width:none;width:calc(100% + 56px)}.chip{flex-shrink:0}.ib{padding-right:10px}.ib+.ib{padding-left:14px}.ib:nth-child(3){padding-left:0}}
+
+/* doors reveal */
+.reveal{height:300vh;padding:0;position:relative}
+.rv-sticky{position:sticky;top:0;height:100vh;overflow:hidden;perspective:1800px;background:radial-gradient(ellipse at 50% 55%,#1a120a,var(--bg) 70%)}
+.glow{position:absolute;left:50%;top:50%;width:6px;height:80vh;transform:translate(-50%,-50%);background:radial-gradient(ellipse,rgba(255,190,110,.95),rgba(247,148,29,.35) 40%,transparent 72%);filter:blur(18px);opacity:.9;z-index:1}
+.stage{position:absolute;inset:0;display:grid;place-items:center;z-index:0}
+.stage-t{position:relative;z-index:3;text-align:center;padding:0 24px;max-width:760px}
+.stage-t h2{font-size:clamp(46px,7.4vw,118px)}
+.stage-t p{color:#cfc8be;margin:18px auto 28px;font-size:17px;max-width:460px;line-height:1.6}
+.pc{position:absolute;border-radius:22px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.08);z-index:2;will-change:transform}
+.pc img{transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.pc:hover img{transform:scale(1.08)}
+.pc figcaption{position:absolute;left:12px;bottom:12px;font-size:12px;padding:6px 11px;border-radius:99px;background:rgba(8,8,10,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12)}
+.pc1{width:min(20vw,300px);height:min(40vh,380px);left:5%;top:9%;rotate:-5deg}
+.pc2{width:min(26vw,400px);height:min(29vh,250px);right:5%;top:8%;rotate:4deg}
+.pc3{width:min(25vw,380px);height:min(28vh,240px);left:7%;bottom:8%;rotate:3deg}
+.pc4{width:min(18vw,270px);height:min(40vh,370px);right:7%;bottom:7%;rotate:-4deg}
+.doors{position:absolute;inset:0;display:flex;z-index:5;transform-style:preserve-3d;pointer-events:none}
+.door{position:relative;width:50%;height:100%;overflow:hidden;background:linear-gradient(180deg,#17171b,#0d0d10);box-shadow:inset 0 0 0 1px rgba(255,255,255,.05);backface-visibility:hidden;will-change:transform}
+.door.l{transform-origin:left center;border-right:1px solid rgba(0,0,0,.6)}
+.door.r{transform-origin:right center;border-left:1px solid rgba(255,255,255,.04)}
+.door .pane{position:absolute;top:9%;bottom:30%;border-radius:18px;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 0 0 10px #121215,0 0 0 11px rgba(255,255,255,.06)}
+.door.l .pane{left:14%;right:16%}.door.r .pane{left:16%;right:14%}
+.door .pane img{filter:blur(16px) brightness(.55) saturate(1.3);transform:scale(1.25)}
+.door .pane::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.14),transparent 35%,transparent 60%,rgba(255,255,255,.05))}
+.door .kick{position:absolute;bottom:7%;height:13%;border-radius:12px;border:1px solid rgba(255,255,255,.07);background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 2px,transparent 2px 9px)}
+.door.l .kick{left:14%;right:16%}.door.r .kick{left:16%;right:14%}
+.door .led{position:absolute;top:6%;bottom:6%;width:3px;border-radius:3px;background:var(--amber);box-shadow:0 0 18px var(--amber),0 0 40px rgba(247,148,29,.6)}
+.door.l .led{right:22px}.door.r .led{left:22px}
+.door .bar{position:absolute;top:36%;height:30%;width:12px;border-radius:8px;background:linear-gradient(90deg,#6b6b70,#e9e9ee 45%,#8a8a90 60%,#4a4a4f);box-shadow:0 10px 30px rgba(0,0,0,.6)}
+.door.l .bar{right:52px}.door.r .bar{left:52px}
+.door .half{position:absolute;top:50%;width:132px;height:132px;margin-top:-66px;border-radius:50%;background:#fff;border:6px solid var(--amber);display:grid;place-content:center;text-align:center;font-family:Montserrat,sans-serif;font-weight:600;color:#111;font-size:44px;line-height:.85;letter-spacing:-1px;box-shadow:0 0 50px rgba(247,148,29,.35)}
+.door .half small{display:block;font-size:13px;letter-spacing:3px;font-weight:500;margin-top:6px}
+.door.l .half{right:-66px}.door.r .half{left:-66px}
+.door .sign{position:absolute;top:3.4%;font-size:11px;letter-spacing:4px;text-transform:uppercase;color:rgba(244,241,236,.55)}
+.door.l .sign{right:16%}.door.r .sign{left:16%}
+.door.r .sign b{color:var(--amber);font-weight:500}
+.hintdoor{position:absolute;left:50%;bottom:4%;transform:translateX(-50%);z-index:6;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--cream);padding:9px 16px;border-radius:99px;background:rgba(8,8,10,.6);backdrop-filter:blur(8px);border:1px solid var(--line)}
+@media(max-width:800px){.pc1{width:38vw;height:24vh;left:4%;top:6%}.pc2{width:44vw;height:18vh;right:4%;top:9%}.pc3{width:44vw;height:18vh;left:4%;bottom:9%}.pc4{width:38vw;height:24vh;right:4%;bottom:6%}
+.door .half{width:96px;height:96px;margin-top:-48px;font-size:30px;border-width:4px}.door .half small{font-size:9px}.door.l .half{right:-48px}.door.r .half{left:-48px}.door .bar{display:none}.door .sign{display:none}}
+
+/* marquee */
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:24px 0;overflow:hidden;background:rgba(8,8,10,.7);backdrop-filter:blur(6px)}
+.track{display:flex;gap:46px;white-space:nowrap;width:max-content;animation:mq 32s linear infinite}
+.track span{font-family:Fraunces,serif;font-size:36px;font-style:italic}
+.track b{color:var(--amber);font-size:22px;align-self:center}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+section{padding:140px 0}
+.kicker{font-size:12px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin-bottom:18px}
+h2{font-family:Fraunces,serif;font-weight:600;font-size:clamp(40px,5.6vw,82px);line-height:1;letter-spacing:-.03em}
+h2 em{font-style:italic;font-weight:400;color:var(--amber)}
+
+/* about */
+.about{position:relative}
+.about .grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:90px;align-items:start}
+.about .left{position:sticky;top:130px}
+.about h2{font-size:clamp(42px,5vw,76px)}
+.about p.big{font-size:18.5px;line-height:1.7;color:var(--muted);margin-top:26px;max-width:440px}
+.about p.big b{color:var(--cream);font-weight:500}
+.sigline{display:flex;align-items:center;gap:14px;margin-top:36px}
+.sigline .logo{width:52px;height:52px;font-size:17px}
+.sigline b{display:block;font-size:15px}.sigline span{font-size:13px;color:var(--muted)}
+.flist{border-top:1px solid var(--line)}
+.frow{position:relative;display:grid;grid-template-columns:56px 1fr 52px;align-items:center;gap:10px;padding:30px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:opacity .4s}
+.frow::before{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:var(--amber);transform:scaleX(0);transform-origin:left;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.flist:hover .frow{opacity:.32}
+.flist .frow:hover{opacity:1}
+.frow:hover::before{transform:scaleX(1)}
+.fn{font-family:Fraunces,serif;font-size:15px;color:var(--muted);transition:color .4s}
+.ft{font-family:Fraunces,serif;font-size:clamp(28px,3.1vw,46px);font-weight:600;letter-spacing:-.025em;line-height:1.05;transition:transform .6s cubic-bezier(.2,.8,.2,1),color .4s}
+.ft em{font-style:italic;font-weight:400}
+.fd{grid-column:2;font-size:15px;color:#bdb6ac;line-height:1.55;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s cubic-bezier(.2,.8,.2,1),opacity .4s,margin .5s}
+.fa{width:48px;height:48px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:18px;transition:all .5s cubic-bezier(.2,.8,.2,1)}
+.frow:hover .fn{color:var(--amber)}
+.frow:hover .ft{transform:translateX(14px);color:var(--amber)}
+.frow:hover .fd{max-height:80px;opacity:1;margin-top:8px;transform:translateX(14px)}
+.frow:hover .fa{background:var(--amber);border-color:var(--amber);color:#120a00;transform:rotate(-45deg)}
+.fthumb{display:none}
+#fimg{position:fixed;left:0;top:0;width:230px;height:290px;border-radius:22px;overflow:hidden;pointer-events:none;z-index:40;opacity:0;scale:.6;transition:opacity .35s,scale .5s cubic-bezier(.2,.8,.2,1);box-shadow:0 40px 90px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.1)}
+#fimg.on{opacity:1;scale:1}
+#fimg img{position:absolute;inset:0;opacity:0;transition:opacity .4s,transform .8s;transform:scale(1.15)}
+#fimg img.on{opacity:1;transform:scale(1)}
+@media(max-width:900px){.about .grid{grid-template-columns:1fr;gap:40px}.about .left{position:static}
+.frow{grid-template-columns:72px 1fr;gap:16px;padding:22px 0}.fn{display:none}.fa{display:none}.fthumb{display:block;width:72px;height:72px;border-radius:16px;overflow:hidden;grid-row:span 2}
+.fd{max-height:none;opacity:1;grid-column:2}.flist:hover .frow{opacity:1}.frow:hover .ft,.frow:hover .fd{transform:none}#fimg{display:none}}
+
+/* gallery (horizontal) */
+.gal{padding:0;overflow:hidden}
+.gal-in{height:100vh;display:flex;flex-direction:column;justify-content:center;gap:44px}
+.gal-head{display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.gal-head p{color:var(--muted);max-width:340px;font-size:15px;line-height:1.6}
+.gtrack{display:flex;gap:22px;padding-left:max(28px,calc((100vw - 1280px)/2 + 28px));width:max-content;align-items:center}
+.gi{position:relative;border-radius:24px;overflow:hidden;flex-shrink:0;height:min(56vh,520px)}
+.gi.p{width:min(32vh,300px)}.gi.l{width:min(78vh,720px)}
+.gi img{transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.gi:hover img{transform:scale(1.06)}
+.gi figcaption{position:absolute;left:16px;bottom:14px;font-size:13px;background:rgba(8,8,10,.6);backdrop-filter:blur(8px);padding:7px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.12)}
+.gi .n{position:absolute;top:14px;right:16px;font-family:Fraunces,serif;font-size:14px;color:rgba(255,255,255,.8)}
+@media(max-width:800px){.gal-in{height:auto;padding:110px 0}.gtrack{overflow-x:auto;width:auto;padding-right:28px;scroll-snap-type:x mandatory}.gi{scroll-snap-align:start}}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:46px 28px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .n{font-family:Fraunces,serif;font-size:58px;font-weight:600;letter-spacing:-.03em}
+.stat .n small{font-size:28px;color:var(--amber)}
+.stat .l{color:var(--muted);font-size:13px;margin-top:6px}
+@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(2){border-right:none}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* signatures */
+.sig-head{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:60px;flex-wrap:wrap}
+.sigs{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;perspective:1200px}
+.sig{border-radius:26px;min-height:470px;position:relative;overflow:hidden;transform-style:preserve-3d;transition:transform .15s ease-out;display:flex;flex-direction:column;justify-content:flex-end;padding:30px;isolation:isolate}
+.sig .bgimg{position:absolute;inset:0;z-index:-2}
+.sig .bgimg img{transition:transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.sig:hover .bgimg img{transform:scale(1.07)}
+.sig::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(8,8,10,0) 35%,rgba(8,8,10,.92))}
+.sig::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.16),transparent 45%);pointer-events:none}
+.sig .no{position:absolute;top:24px;left:28px;font-size:12px;letter-spacing:2px;text-transform:uppercase;background:rgba(8,8,10,.55);backdrop-filter:blur(8px);padding:7px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.12)}
+.sig h3{font-family:Fraunces,serif;font-size:34px;line-height:1.05;font-weight:600;transform:translateZ(40px)}
+.sig .pr{display:flex;justify-content:space-between;align-items:center;margin-top:12px;font-size:14px;color:#d8d2c9;transform:translateZ(30px)}
+.sig .pr b{font-size:24px;font-family:Fraunces,serif;color:var(--amber)}
+@media(max-width:900px){.sigs{grid-template-columns:1fr}}
+
+/* menu */
+.menu{background:linear-gradient(rgba(16,16,19,0),rgba(16,16,19,.9) 18%,rgba(16,16,19,.9) 82%,rgba(16,16,19,0))}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:46px 0 40px}
+.tabs button{padding:11px 20px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--muted);font-family:inherit;font-size:14px;cursor:pointer;transition:all .3s}
+.tabs button.on{background:var(--cream);color:var(--bg);border-color:var(--cream)}
+.mlist{display:grid;grid-template-columns:1fr 1fr;column-gap:70px}
+.mi{display:flex;align-items:baseline;gap:14px;padding:24px 0;border-bottom:1px solid var(--line)}
+.mi .nm{font-family:Fraunces,serif;font-size:24px}
+.mi .dots{flex:1;border-bottom:1px dotted rgba(244,241,236,.22);transform:translateY(-6px)}
+.mi .p{font-weight:600;color:var(--amber)}
+.mi .p.ask{color:var(--muted);font-weight:400;font-size:13px}
+.mnote{color:var(--muted);font-size:13px;margin-top:28px}
+.mnote a{color:var(--amber);border-bottom:1px solid}
+@media(max-width:800px){.mlist{grid-template-columns:1fr}}
+
+/* ---------- TESTIMONIALS ---------- */
+.testi{position:relative;padding:160px 0 0;overflow:hidden}
+.testi .bgp{position:absolute;inset:0;z-index:-1;opacity:.22;filter:saturate(1.2)}
+.testi .bgp::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg),rgba(8,8,10,.55) 30%,rgba(8,8,10,.7) 70%,var(--bg))}
+.tgrid{display:grid;grid-template-columns:420px 1fr;gap:80px;align-items:center}
+.score{margin-top:40px;border:1px solid var(--line);border-radius:26px;padding:28px;background:rgba(21,21,25,.65);backdrop-filter:blur(14px)}
+.score .big{display:flex;align-items:baseline;gap:10px}
+.score .big b{font-family:Fraunces,serif;font-size:76px;font-weight:600;line-height:1;letter-spacing:-.04em}
+.score .big span{color:var(--muted);font-size:14px}
+.score .src{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.score .src span{font-size:12px;border:1px solid var(--line);padding:6px 11px;border-radius:99px;color:var(--muted)}
+.hl{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.hl span{font-size:13px;padding:8px 13px;border-radius:99px;background:rgba(247,148,29,.12);color:var(--amber2);border:1px solid rgba(247,148,29,.25)}
+.polaroid{margin-top:34px;width:220px;background:#f6f3ee;padding:10px 10px 38px;border-radius:6px;transform:rotate(-5deg);box-shadow:0 30px 60px rgba(0,0,0,.55);position:relative}
+.polaroid .im{height:250px;border-radius:2px;overflow:hidden}
+.polaroid p{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-family:Fraunces,serif;font-style:italic;color:#2a2018;font-size:15px}
+.qcard{position:relative;border-radius:34px;padding:64px 60px 46px;background:linear-gradient(160deg,rgba(28,28,34,.85),rgba(14,14,18,.85));border:1px solid var(--line);backdrop-filter:blur(18px);box-shadow:0 50px 120px rgba(0,0,0,.5);overflow:hidden;min-height:470px;display:flex;flex-direction:column}
+.qcard::before{content:"“";position:absolute;top:-58px;right:30px;font-family:Fraunces,serif;font-size:340px;line-height:1;color:var(--amber);opacity:.13}
+.qcard::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(rgba(61,123,255,.25),transparent 70%);left:-80px;bottom:-120px;pointer-events:none}
+.stars{color:var(--amber);letter-spacing:4px;font-size:18px;margin-bottom:26px}
+.slides{position:relative;flex:1}
+.slide{position:absolute;inset:0;visibility:hidden}
+.slide.on{visibility:visible;position:relative}
+.slide q{font-family:Fraunces,serif;font-size:clamp(28px,3.3vw,46px);line-height:1.18;letter-spacing:-.015em;display:block;quotes:none}
+.slide q .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.08em}
+.slide q .w>span{display:inline-block}
+.who{display:flex;align-items:center;gap:14px;margin-top:34px}
+.av{width:50px;height:50px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:17px;color:#120a00;background:linear-gradient(135deg,var(--amber2),var(--amber))}
+.who b{display:block;font-size:16px}
+.who span{font-size:13px;color:var(--muted)}
+.tctl{display:flex;align-items:center;gap:18px;margin-top:40px;padding-top:26px;border-top:1px solid var(--line)}
+.prog{flex:1;display:flex;gap:8px}
+.prog i{flex:1;height:3px;border-radius:3px;background:var(--line);overflow:hidden;position:relative;cursor:pointer}
+.prog i b{position:absolute;inset:0;background:var(--amber);transform:scaleX(0);transform-origin:left}
+.cnt{font-family:Fraunces,serif;font-size:15px;color:var(--muted);min-width:56px}
+.cnt b{color:var(--cream)}
+.arr{width:50px;height:50px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;font-size:18px;transition:all .3s}
+.arr:hover{background:var(--amber);color:#120a00;border-color:var(--amber)}
+.bigmq{margin-top:140px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 0;overflow:hidden}
+.bigmq .track{animation-duration:40s}
+.bigmq .track span{font-size:clamp(48px,7vw,96px);font-style:normal;font-weight:800;color:transparent;-webkit-text-stroke:1px rgba(244,241,236,.35)}
+.bigmq .track span.f{color:var(--cream);-webkit-text-stroke:0;font-style:italic;font-weight:400}
+@media(max-width:1000px){.tgrid{grid-template-columns:1fr;gap:50px}.qcard{padding:48px 30px 34px}.polaroid{display:none}}
+
+/* visit */
+.visit .grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:60px}
+.panel{border:1px solid var(--line);border-radius:28px;padding:42px;background:rgba(21,21,25,.72);backdrop-filter:blur(12px)}
+.row{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .k{width:90px;flex-shrink:0;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);padding-top:3px}
+.row .v{font-size:17px;line-height:1.5}
+.row .v small{display:block;color:var(--muted);font-size:13px;margin-top:3px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+form h3{grid-column:1/-1;font-family:Fraunces,serif;font-size:32px;font-weight:600;margin-bottom:6px}
+form .full{grid-column:1/-1}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:7px}
+input,select{width:100%;background:rgba(8,8,10,.7);border:1px solid var(--line);border-radius:14px;padding:14px 16px;color:var(--cream);font-family:inherit;font-size:15px;outline:none;transition:border .3s;color-scheme:dark}
+input:focus,select:focus{border-color:var(--amber)}
+#bookOk{grid-column:1/-1;display:none;background:#14231a;border:1px solid #2f5a3d;border-radius:14px;padding:16px;font-size:14px;line-height:1.6}
+#bookOk a{color:var(--green);font-weight:600;border-bottom:1px solid}
+@media(max-width:860px){.visit .grid{grid-template-columns:1fr}form{grid-template-columns:1fr}}
+
+/* ---------- FOOTER ---------- */
+footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0),#060607 20%)}
+.fcta{position:relative;border-radius:36px;overflow:hidden;min-height:440px;display:flex;align-items:flex-end;padding:56px;isolation:isolate}
+.fcta .bg{position:absolute;inset:0;z-index:-2}
+.fcta::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(6,6,7,.92) 0%,rgba(6,6,7,.55) 55%,rgba(6,6,7,.2))}
+.fcta h2{font-size:clamp(46px,7vw,104px);max-width:760px}
+.fcta p{color:#cfc9c0;margin:20px 0 32px;max-width:440px;line-height:1.6}
+.fcta .cta{gap:14px}
+.wa{background:#25d366;color:#05210f}
+.wa:hover{background:#3ee07b;transform:translateY(-2px)}
+.insta{margin-top:90px}
+.insta-h{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px;gap:20px;flex-wrap:wrap}
+.insta-h b{font-family:Fraunces,serif;font-size:32px;font-weight:600}
+.insta-h a{color:var(--amber);font-size:14px}
+.igrid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.ig{aspect-ratio:1;border-radius:16px;overflow:hidden;position:relative;display:block}
+.ig img{transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .5s}
+.ig::after{content:"↗";position:absolute;inset:0;display:grid;place-items:center;font-size:28px;color:#fff;background:rgba(247,148,29,.55);opacity:0;transition:opacity .4s}
+.ig:hover img{transform:scale(1.1)}.ig:hover::after{opacity:1}
+@media(max-width:800px){.igrid{grid-template-columns:repeat(3,1fr)}}
+.fcols{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px;margin-top:100px;padding-bottom:60px;border-bottom:1px solid var(--line)}
+.fcols h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--amber);margin-bottom:20px;font-weight:600}
+.fcols p,.fcols a{color:var(--muted);font-size:14.5px;line-height:1.9;display:block}
+.fcols a:hover{color:var(--cream)}
+.fbrand p{font-family:Fraunces,serif;font-size:22px;color:var(--cream);line-height:1.35;margin-top:22px;max-width:300px}
+.open-now{display:inline-flex;align-items:center;gap:8px;font-size:13px;margin-top:16px;padding:7px 13px;border-radius:99px;border:1px solid var(--line)}
+.open-now i{width:7px;height:7px;border-radius:50%;background:var(--muted)}
+.open-now.on i{background:var(--green);box-shadow:0 0 10px var(--green)}
+@media(max-width:860px){.fcols{grid-template-columns:1fr 1fr}.fbot{padding-right:0;padding-bottom:100px}}
+.wordmark{position:relative;margin:50px 0 0;font-family:Montserrat,sans-serif;font-weight:600;font-size:clamp(80px,20.5vw,330px);line-height:.82;letter-spacing:-.05em;text-align:center;user-select:none;white-space:nowrap}
+.wordmark .o{color:transparent;-webkit-text-stroke:1.5px rgba(244,241,236,.14)}
+.wordmark .f{position:absolute;inset:0;color:var(--amber);clip-path:inset(0 100% 0 0);background:linear-gradient(90deg,var(--amber),var(--amber2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.fbot{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:28px 170px 34px 0;color:var(--muted);font-size:13px;flex-wrap:wrap}
+.fbot b{color:var(--cream)}
+.top{display:inline-flex;align-items:center;gap:10px;cursor:pointer;background:none;border:1px solid var(--line);color:var(--cream);padding:10px 16px;border-radius:99px;font-family:inherit;font-size:13px}
+.top:hover{border-color:var(--amber);color:var(--amber)}
+
+.rv{opacity:0;transform:translateY(40px)}
+
+/* chat */
+#fab{position:fixed;right:24px;bottom:24px;z-index:60;display:flex;align-items:center;gap:10px;background:var(--amber);color:#120a00;border:none;border-radius:99px;padding:13px 20px 13px 13px;font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;box-shadow:0 14px 40px rgba(247,148,29,.35);transition:transform .3s}
+#fab:hover{transform:translateY(-3px)}
+#fab .avt{width:30px;height:30px;border-radius:50%;background:#120a00;color:var(--amber);display:grid;place-items:center;font-family:Fraunces,serif;font-weight:800;font-size:14px}
+#chat{position:fixed;right:24px;bottom:96px;z-index:60;width:min(380px,calc(100vw - 32px));height:min(540px,calc(100vh - 140px));background:#121216;border:1px solid var(--line);border-radius:24px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(20px) scale(.96);opacity:0;pointer-events:none;transition:all .35s cubic-bezier(.2,.8,.2,1)}
+#chat.open{transform:none;opacity:1;pointer-events:auto}
+.ch{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.ch b{display:block;font-size:14px}.ch small{color:var(--green);font-size:12px}
+.ch button{margin-left:auto;background:none;border:none;color:var(--muted);font-size:22px;cursor:pointer}
+#cmsgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:9px}
+.cm{max-width:86%;padding:10px 13px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.cm.bot{background:#202027;align-self:flex-start;border-bottom-left-radius:4px}
+.cm.me{background:var(--amber);color:#120a00;align-self:flex-end;border-bottom-right-radius:4px}
+.cchips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
+.cchips button{background:none;border:1px solid var(--line);color:var(--cream);border-radius:99px;padding:6px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+.cbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+.cbar input{padding:11px 14px;font-size:14px;border-radius:12px}
+.cbar button{background:var(--amber);border:none;color:#120a00;border-radius:12px;padding:0 16px;font-weight:600;cursor:pointer;font-family:inherit}
+</style>
+</head>
+<body>
+<div id="loader"><div style="text-align:center"><div class="logo xl" style="margin:0 auto">DG<small>CAFE</small></div><div class="bar"><i id="lbar"></i></div></div></div>
+<canvas id="gl"></canvas>
+<div class="grain"></div>
+
+<nav id="nav"><div class="wrap">
+  <a href="#top" class="brand"><span class="logo">DG<small>CAFE</small></span>DG Cafe</a>
+  <div class="links"><a href="#about">About</a><a href="#inside">Inside</a><a href="#menu">Menu</a><a href="#reviews">Reviews</a><a href="#visit">Visit</a></div>
+  <a href="#visit" class="btn primary">Book a table</a>
+</div></nav>
+
+<main id="top">
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap" style="flex:1;display:flex;flex-direction:column">
+      <div class="hgrid">
+        <div>
+          <div class="status hi-in" id="status"><i></i><span>Dhaval Plaza, Chiplun</span></div>
+          <h1 class="hh1"><span class="ln"><span>Coffee, pizza</span></span><span class="ln"><span>&amp; desserts in the</span></span><span class="ln"><span>heart of <em>Chiplun.</em></span></span></h1>
+          <p class="hlead hi-in">DG Cafe is a <b>family-friendly cafe at Dhaval Plaza</b>. Dine in with friends, grab a takeaway or order home. Open every day, 11 AM to 11 PM.</p>
+          <div class="hcta hi-in"><a href="#visit" class="btn primary lg">Book a table</a><a href="#menu" class="btn ghost lg">View menu →</a></div>
+          <div class="trust hi-in">
+            <div><b><span class="st">★★★★★</span> 283+</b><span>Google reviews</span></div><div class="sep"></div>
+            <div><b>₹400</b><span>Average for two</span></div><div class="sep"></div>
+            <div><b>Free parking</b><span>Right outside</span></div>
+          </div>
+        </div>
+        <div class="visual" id="visual">
+          <div class="vphoto"><img src="assets/interior-blue.jpg" alt="Inside DG Cafe, Dhaval Plaza, Chiplun"></div>
+          <div class="vtag"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg>Inside DG Cafe · Dhaval Plaza</div>
+          <div class="best"><div class="th"><img src="assets/truffle.jpg" alt="" style="object-position:100% center"></div><div><small>Bestseller</small><b>Dutch Truffle Pastry</b><span>₹80</span></div></div>
+          <div id="cupAnchor"></div>
+        </div>
+      </div>
+      <div class="crave hi-in"><span>What are you craving?</span>
+        <div class="chips">
+          <button class="chip" data-cat="Coffee &amp; Shakes"><i>☕</i>Coffee &amp; shakes</button>
+          <button class="chip" data-cat="Pizza"><i>🍕</i>Pizza</button>
+          <button class="chip" data-cat="Sandwiches &amp; Salads"><i>🥪</i>Sandwiches</button>
+          <button class="chip" data-cat="Pasta &amp; Sizzlers"><i>🍝</i>Pasta &amp; sizzlers</button>
+          <button class="chip" data-cat="Desserts"><i>🍰</i>Desserts</button>
+        </div>
+      </div>
+      <div class="infobar hi-in">
+        <div class="ib"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.6"/></svg><div><small>Location</small><b>Dhaval Plaza, Chiplun</b><a class="lk" href="https://www.google.com/maps/search/?api=1&query=DG+Cafe+Dhaval+Plaza+Chiplun" rel="noopener">Get directions →</a></div></div>
+        <div class="ib"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><small>Hours</small><b id="ibHours">11 AM – 11 PM daily</b><a class="lk" href="#visit">Reserve a table →</a></div></div>
+        <div class="ib"><svg viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg><div><small>Call or WhatsApp</small><b>096650 60568</b><a class="lk" href="https://wa.me/919665060568?text=Hi%20DG%20Cafe!" rel="noopener">Message us →</a></div></div>
+        <div class="ib"><svg viewBox="0 0 24 24"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17l4-7h5l3 7M10 10l-1-3H6M15 10l1-3h2"/></svg><div><small>Delivery</small><b>Order on Zomato</b><a class="lk" href="https://www.zomato.com/" rel="noopener">Order now →</a></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal" id="reveal">
+    <div class="rv-sticky">
+      <div class="stage">
+        <figure class="pc pc1" data-d="22"><img src="assets/counter.jpg" alt="DG Cafe counter"><figcaption>The counter</figcaption></figure>
+        <figure class="pc pc2" data-d="30"><img src="assets/tarts-meringue.jpg" alt="Dessert display"><figcaption>Dessert display</figcaption></figure>
+        <figure class="pc pc3" data-d="26"><img src="assets/interior-window.jpg" alt="The lounge"><figcaption>The lounge</figcaption></figure>
+        <figure class="pc pc4" data-d="18"><img src="assets/interior-table.jpg" alt="Group tables"><figcaption>Group tables</figcaption></figure>
+        <div class="stage-t"><div class="kicker">Welcome in</div><h2>Pull up a <em>chair.</em></h2><p>Warm lights, long tables and a dessert counter you'll keep coming back to.</p><a href="#visit" class="btn primary">Reserve a table</a></div>
+      </div>
+      <div class="glow" id="glow"></div>
+      <div class="doors">
+        <div class="door l" id="doorL"><div class="sign">Welcome to</div><div class="pane"><img src="assets/interior-blue.jpg" alt=""></div><div class="kick"></div><div class="led"></div><div class="bar"></div><div class="half">DG<small>CAFE</small></div></div>
+        <div class="door r" id="doorR"><div class="sign"><b>DG Cafe</b> · Chiplun</div><div class="pane"><img src="assets/interior-blue.jpg" alt=""></div><div class="kick"></div><div class="led"></div><div class="bar"></div><div class="half">DG<small>CAFE</small></div></div>
+      </div>
+      <div class="hintdoor" id="hintdoor">Scroll to step inside ↓</div>
+    </div>
+  </section>
+
+  <div class="marquee"><div class="track" id="track"></div></div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="wrap grid">
+      <div class="left">
+        <div class="kicker rv">Our story</div>
+        <h2 class="rv">Chiplun's favourite <em>hangout</em> spot.</h2>
+        <p class="big rv">Coffee with friends, a family dinner or a late-evening sizzler: <b>DG Cafe is where Chiplun comes to slow down.</b> Neon lights overhead, good music, generous plates and a dessert counter that steals the show.</p>
+        <div class="sigline rv"><span class="logo">DG<small>CAFE</small></span><div><b>DG Cafe &amp; Resto</b><span>Dhaval Plaza, Chiplun</span></div></div>
+      </div>
+      <div class="flist" id="flist">
+        <div class="frow rv" data-img="0"><div class="fthumb"><img src="assets/interior-blue.jpg" alt=""></div><span class="fn">01</span><div><div class="ft">Lively music &amp; <em>neon nights</em></div><div class="fd">Great music and warm lights. The vibe Chiplun keeps coming back to.</div></div><span class="fa">→</span></div>
+        <div class="frow rv" data-img="1"><div class="fthumb"><img src="assets/tarts-meringue.jpg" alt=""></div><span class="fn">02</span><div><div class="ft">A dessert counter <em>to remember</em></div><div class="fd">Pastries, tarts and dessert cups that steal the show. Try the Dutch Truffle at ₹80.</div></div><span class="fa">→</span></div>
+        <div class="frow rv" data-img="2"><div class="fthumb"><img src="assets/interior-table.jpg" alt=""></div><span class="fn">03</span><div><div class="ft">Room for the <em>whole family</em></div><div class="fd">Long tables, comfy booths and space for every generation.</div></div><span class="fa">→</span></div>
+        <div class="frow rv" data-img="3"><div class="fthumb"><img src="assets/plaza.jpg" alt=""></div><span class="fn">04</span><div><div class="ft">Easy parking at <em>Dhaval Plaza</em></div><div class="fd">Drive in and park right outside. No circling around.</div></div><span class="fa">→</span></div>
+        <div class="frow rv" data-img="4"><div class="fthumb"><img src="assets/dessert-cup.jpg" alt=""></div><span class="fn">05</span><div><div class="ft">Delivered to <em>your door</em></div><div class="fd">Your favourites, delivered home via Zomato.</div></div><span class="fa">→</span></div>
+      </div>
+    </div>
+  </section>
+  <div id="fimg"><img src="assets/interior-blue.jpg" alt=""><img src="assets/tarts-meringue.jpg" alt=""><img src="assets/interior-table.jpg" alt=""><img src="assets/plaza.jpg" alt=""><img src="assets/dessert-cup.jpg" alt=""></div>
+
+  <!-- GALLERY -->
+  <section class="gal" id="inside">
+    <div class="gal-in">
+      <div class="wrap gal-head"><div><div class="kicker">Step inside</div><h2>Made for <em>long</em> evenings.</h2></div><p>Neon lights overhead, warm pendants, a dessert counter that steals the show. Scroll to walk through.</p></div>
+      <div class="gtrack" id="gtrack">
+        <figure class="gi l"><img src="assets/interior-window.jpg" alt="DG Cafe lounge" loading="lazy"><span class="n">01</span><figcaption>The lounge</figcaption></figure>
+        <figure class="gi p"><img src="assets/counter.jpg" alt="DG Cafe counter" loading="lazy"><span class="n">02</span><figcaption>The counter</figcaption></figure>
+        <figure class="gi l"><img src="assets/tarts-meringue.jpg" alt="Meringue tarts" loading="lazy"><span class="n">03</span><figcaption>Dessert display</figcaption></figure>
+        <figure class="gi p"><img src="assets/interior-table.jpg" alt="Group table" loading="lazy"><span class="n">04</span><figcaption>Group tables</figcaption></figure>
+        <figure class="gi p"><img src="assets/tarts-plate.jpg" alt="Tarts" loading="lazy"><span class="n">05</span><figcaption>Sweet plates</figcaption></figure>
+        <figure class="gi l"><img src="assets/plaza.jpg" alt="Dhaval Plaza at night" loading="lazy"><span class="n">06</span><figcaption>Dhaval Plaza at night</figcaption></figure>
+        <figure class="gi p"><img src="assets/wall.jpg" alt="DG Cafe photo wall" loading="lazy"><span class="n">07</span><figcaption>#DhavalPlaza</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-top:60px"><div class="stats">
+    <div class="stat rv"><div class="n" data-count="283">0</div><div class="l">Google reviews</div></div>
+    <div class="stat rv"><div class="n"><small>₹</small><span data-count="400">0</span></div><div class="l">Average for two</div></div>
+    <div class="stat rv"><div class="n"><span data-count="12">0</span><small>hrs</small></div><div class="l">Open daily, 11 AM to 11 PM</div></div>
+    <div class="stat rv"><div class="n"><span data-count="1">0</span><small>K+</small></div><div class="l">Instagram followers</div></div>
+  </div></div>
+
+  <!-- SIGNATURES -->
+  <section id="signatures">
+    <div class="wrap">
+      <div class="sig-head"><div><div class="kicker rv">House favourites</div><h2 class="rv">Ordered <em>again</em><br>and again.</h2></div><a href="#menu" class="btn ghost rv">Full menu →</a></div>
+      <div class="sigs">
+        <div class="sig rv"><div class="bgimg"><img src="assets/truffle.jpg" alt="" loading="lazy" style="object-position:100% center"></div><div class="no">01 · Pastry</div><h3>Dutch Truffle Pastry</h3><div class="pr"><span>Glossy ganache, gold leaf</span><b>₹80</b></div></div>
+        <div class="sig rv"><div class="bgimg"><img src="assets/dessert-cup.jpg" alt="" loading="lazy"></div><div class="no">02 · Dessert cup</div><h3>Oreo Dessert Cup</h3><div class="pr"><span>Layered, creamy, crunchy</span><b style="font-size:14px;font-family:Inter;color:#d8d2c9">Ask staff</b></div></div>
+        <div class="sig rv"><div class="bgimg"><img src="assets/tarts-meringue.jpg" alt="" loading="lazy"></div><div class="no">03 · Tarts</div><h3>Toasted Meringue Tarts</h3><div class="pr"><span>Fresh from the display</span><b style="font-size:14px;font-family:Inter;color:#d8d2c9">Ask staff</b></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu" id="menu">
+    <div class="wrap">
+      <div class="kicker rv">The menu</div>
+      <h2 class="rv">Something for <em>every</em> craving.</h2>
+      <div class="tabs rv" id="tabs"></div>
+      <div class="mlist" id="mlist"></div>
+      <p class="mnote rv">Plus North Indian, Chinese, biryani, kebabs and more. Full menu &amp; delivery on <a href="https://www.zomato.com/" rel="noopener">Zomato</a>. Prices may vary, so ask our team.</p>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi" id="reviews">
+    <div class="bgp"><img src="assets/interior-table.jpg" alt=""></div>
+    <div class="wrap tgrid">
+      <div>
+        <div class="kicker rv">Guest love</div>
+        <h2 class="rv">What Chiplun <em>says.</em></h2>
+        <div class="score rv">
+          <div class="big"><b data-count="283">0</b><span>+ reviews and counting</span></div>
+          <div class="src"><span>Google</span><span>Zomato</span><span>Justdial</span></div>
+          <div class="hl"><span>Tasty food</span><span>Lively atmosphere</span><span>Great music</span><span>Easy parking</span></div>
+        </div>
+        <div class="polaroid rv"><div class="im"><img src="assets/dessert-cup.jpg" alt=""></div><p>sweet tooth, sorted ♡</p></div>
+      </div>
+      <div class="qcard rv">
+        <div class="stars">★★★★★</div>
+        <div class="slides" id="slides">
+          <div class="slide on" data-q="Every dish we ordered was absolutely delicious and packed with flavor."><div class="who"><div class="av">FS</div><div><b>Faiz Siddiqui</b><span>Google review</span></div></div></div>
+          <div class="slide" data-q="Tasty food at reasonable price, nice place with ample parking."><div class="who"><div class="av">JH</div><div><b>Jitendra H G</b><span>Google review</span></div></div></div>
+          <div class="slide" data-q="Diners love the tasty food, the lively atmosphere with great music, and the easy parking."><div class="who"><div class="av" style="background:#fff;color:#4285f4;font-family:Arial">G</div><div><b>What reviewers say most</b><span>Highlights from 283 Google reviews</span></div></div></div>
+        </div>
+        <div class="tctl">
+          <div class="cnt"><b id="cur">01</b> / 03</div>
+          <div class="prog" id="prog"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+          <button class="arr" id="prev" aria-label="Previous">←</button><button class="arr" id="next" aria-label="Next">→</button>
+        </div>
+      </div>
+    </div>
+    <div class="bigmq"><div class="track" id="track2"></div></div>
+  </section>
+
+  <!-- VISIT -->
+  <section class="visit" id="visit">
+    <div class="wrap">
+      <div class="kicker rv">Visit us</div>
+      <h2 class="rv">Your table is <em>waiting.</em></h2>
+      <div class="grid">
+        <div class="panel rv">
+          <div class="row"><div class="k">Address</div><div class="v">Dhaval Plaza, near Nagar Parishad<br>Swara Vihar, Chiplun 415605<small><a href="https://www.google.com/maps/search/?api=1&query=DG+Cafe+Dhaval+Plaza+Chiplun" rel="noopener" style="color:var(--amber)">Open in Google Maps →</a></small></div></div>
+          <div class="row"><div class="k">Hours</div><div class="v">Every day · 11 AM to 11 PM<small>Festival hours may vary</small></div></div>
+          <div class="row"><div class="k">Call</div><div class="v"><a href="tel:+919665060568">096650 60568</a><small>Also on WhatsApp</small></div></div>
+          <div class="row"><div class="k">Social</div><div class="v"><a href="https://www.instagram.com/dgcafe_0011/" rel="noopener">@dgcafe_0011</a><small>Daily specials &amp; reels</small></div></div>
+        </div>
+        <div class="panel rv">
+          <form id="book">
+            <h3>Reserve a table</h3>
+            <div><label>Name</label><input name="n" required placeholder="Your name"></div>
+            <div><label>Phone</label><input name="p" required inputmode="tel" placeholder="10-digit mobile"></div>
+            <div><label>Date</label><input name="d" type="date" required></div>
+            <div><label>Time</label><select name="t" required></select></div>
+            <div class="full"><label>Guests</label><select name="g"><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10+</option></select></div>
+            <button class="btn primary full" style="justify-content:center">Request booking</button>
+            <div id="bookOk"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="fcta rv">
+      <div class="bg"><img src="assets/counter.jpg" alt="" style="object-position:center 60%"></div>
+      <div>
+        <div class="kicker">Hungry yet?</div>
+        <h2>See you at <em>DG Cafe.</em></h2>
+        <p>Walk in, book a table or just say hi. Priya, our assistant, replies instantly, any time of day.</p>
+        <div class="cta">
+          <a class="btn wa" href="https://wa.me/919665060568?text=Hi%20DG%20Cafe!" rel="noopener">WhatsApp us</a>
+          <a href="#visit" class="btn primary">Book a table</a>
+          <button class="btn ghost" onclick="openChat()">Chat with Priya</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="insta">
+      <div class="insta-h"><b>Follow the vibe</b><a href="https://www.instagram.com/dgcafe_0011/" rel="noopener">@dgcafe_0011 on Instagram ↗</a></div>
+      <div class="igrid">
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/dessert-cup.jpg" alt="" loading="lazy"></a>
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/interior-blue.jpg" alt="" loading="lazy"></a>
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/tarts-plate.jpg" alt="" loading="lazy"></a>
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/wall.jpg" alt="" loading="lazy"></a>
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/truffle.jpg" alt="" loading="lazy" style="object-position:100% center"></a>
+        <a class="ig" href="https://www.instagram.com/dgcafe_0011/" rel="noopener"><img src="assets/interior-window.jpg" alt="" loading="lazy"></a>
+      </div>
+    </div>
+
+    <div class="fcols">
+      <div class="fbrand">
+        <div class="brand"><span class="logo">DG<small>CAFE</small></span>DG Cafe &amp; Resto</div>
+        <p>Delectable food that suits your taste.</p>
+        <div class="open-now" id="openNow"><i></i><span>Checking hours…</span></div>
+      </div>
+      <div><h4>Visit</h4><p>Dhaval Plaza, near Nagar Parishad, Swara Vihar, Chiplun 415605</p><a href="https://www.google.com/maps/search/?api=1&query=DG+Cafe+Dhaval+Plaza+Chiplun" rel="noopener" style="color:var(--amber)">Get directions ↗</a></div>
+      <div><h4>Hours</h4><p>Monday to Sunday<br>11:00 AM – 11:00 PM</p><p style="font-size:12.5px">Festival hours may vary</p></div>
+      <div><h4>Explore</h4><a href="#menu">Menu</a><a href="#inside">Inside DG</a><a href="#reviews">Reviews</a><a href="#visit">Book a table</a><a href="tel:+919665060568">096650 60568</a></div>
+    </div>
+  </div>
+  <div class="wordmark" id="wordmark"><span class="o">DG CAFE</span><span class="f" id="wmFill">DG CAFE</span></div>
+  <div class="wrap fbot">
+    <span>© 2026 DG Cafe &amp; Resto, Chiplun. All rights reserved.</span>
+    <span>Website &amp; AI by <b>Caelion</b></span>
+    <button class="top" id="toTop">Back to top ↑</button>
+  </div>
+</footer>
+
+<button id="fab" onclick="toggleChat()"><span class="avt">P</span>Ask Priya</button>
+<div id="chat">
+  <div class="ch"><span class="logo" style="width:38px;height:38px;font-size:13px;border-width:2px">DG<small>CAFE</small></span><div><b>Priya · DG Cafe</b><small>● Replies instantly</small></div><button onclick="toggleChat()">×</button></div>
+  <div id="cmsgs"></div>
+  <div class="cchips" id="cchips"></div>
+  <div class="cbar"><input id="cin" placeholder="Ask about menu, timings, booking…"><button onclick="csend()">Send</button></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const hasG=typeof gsap!=="undefined"&&typeof ScrollTrigger!=="undefined", has3=typeof THREE!=="undefined";
+if(hasG)gsap.registerPlugin(ScrollTrigger);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let lenis=null;
+
+/* data */
+const MENU={
+  "Pizza":[["Margherita Pizza",300],["Corn & Cheese Pizza",219],["Paneer Tikka Pizza",239],["Chicken Tikka Pizza",279],["Farmhouse Pizza"],["BBQ Paneer Pizza"]],
+  "Sandwiches & Salads":[["Bombay Cheese Sandwich",149],["Tandoori Paneer Sandwich"],["Chicken Sandwich with Fries"],["Chicken Burger with Cheese"],["Veg Caesar Salad",169],["Chicken Caesar Salad",239]],
+  "Pasta & Sizzlers":[["Veg Alfredo Pasta",209],["Veg Arrabiata Pasta"],["Stroganoff Sizzler"],["Aloo Paratha"]],
+  "Desserts":[["Dutch Truffle Pastry",80],["Sizzling Brownie",169],["Red Velvet Cake"],["Cake Pops"],["Donuts"]],
+  "Coffee & Shakes":[["Latte"],["KitKat Frappe"],["Virgin Mojito",169],["Crazy Blackcurrant Milkshake",169]]
+};
+
+/* open-now status (IST) */
+(function(){
+  const h=+new Intl.DateTimeFormat("en-GB",{hour:"numeric",hour12:false,timeZone:"Asia/Kolkata"}).format(new Date());
+  const open=h>=11&&h<23;
+  const el=$("#openNow");el.classList.toggle("on",open);el.querySelector("span").textContent=open?"Open now · till 11 PM":"Closed now · opens 11 AM";
+  const st=$("#status");st.classList.toggle("on",open);
+  st.querySelector("span").innerHTML=open?"<b>Open now</b> · closes 11 PM<em class=pl> · Dhaval Plaza, Chiplun</em>":"<b>Closed now</b> · opens 11 AM<em class=pl> · Dhaval Plaza, Chiplun</em>";
+  $("#ibHours").textContent=open?"Open now · till 11 PM":"Opens today at 11 AM";
+})();
+
+/* marquees */
+const words=["Coffee","Pizza","Sizzlers","Shakes","Desserts","Family dinners","कॉफी","गप्पा"];
+$("#track").innerHTML=[...words,...words].map(w=>`<span>${w}</span><b>✦</b>`).join("");
+const w2=["Tasty food","Lively vibes","Great music","Easy parking","Neon nights","Sweet endings"];
+$("#track2").innerHTML=[...w2,...w2].map((w,i)=>`<span class="${i%2?"f":""}">${w}</span><b>✦</b>`).join("");
+
+/* menu */
+function renderMenu(cat){
+  $$("#tabs button").forEach(b=>b.classList.toggle("on",b.dataset.c===cat));
+  $("#mlist").innerHTML=MENU[cat].map(([n,p])=>`<div class="mi"><span class="nm">${n}</span><span class="dots"></span><span class="p ${p?"":"ask"}">${p?"₹"+p:"Ask staff"}</span></div>`).join("");
+  if(hasG)gsap.from("#mlist .mi",{opacity:0,y:18,stagger:.05,duration:.6,ease:"power3.out"});
+}
+$("#tabs").innerHTML=Object.keys(MENU).map(c=>`<button data-c="${c}">${c}</button>`).join("");
+$$("#tabs button").forEach(b=>b.onclick=()=>renderMenu(b.dataset.c));
+renderMenu("Pizza");
+
+/* booking */
+(function(){
+  const t=document.querySelector("select[name=t]");
+  for(let h=11;h<=22;h++)for(const m of [0,30]){if(h===22&&m)continue;const hh=((h+11)%12)+1,ap=h<12?"AM":"PM";t.insertAdjacentHTML("beforeend",`<option>${hh}:${m?"30":"00"} ${ap}</option>`)}
+  document.querySelector("input[name=d]").min=new Date().toISOString().slice(0,10);
+})();
+$("#book").addEventListener("submit",e=>{
+  e.preventDefault();const f=new FormData(e.target);
+  const msg=`Hi DG Cafe! I'd like to book a table.\nName: ${f.get("n")}\nGuests: ${f.get("g")}\nDate: ${f.get("d")}\nTime: ${f.get("t")}\nPhone: ${f.get("p")}`;
+  const ok=$("#bookOk");ok.style.display="block";
+  ok.innerHTML=`✅ Almost done, ${esc(f.get("n"))}! Tap below to confirm on WhatsApp.<br><a href="https://wa.me/919665060568?text=${encodeURIComponent(msg)}" rel="noopener">Send booking on WhatsApp →</a>`;
+});
+
+/* tilt cards */
+$$(".sig").forEach(c=>{
+  c.addEventListener("pointermove",e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+    c.style.transform=`rotateY(${(x-.5)*12}deg) rotateX(${(.5-y)*12}deg)`;c.style.setProperty("--mx",x*100+"%");c.style.setProperty("--my",y*100+"%")});
+  c.addEventListener("pointerleave",()=>c.style.transform="");
+});
+
+/* hero photo parallax */
+let mouse={x:0,y:0};
+addEventListener("pointermove",e=>{mouse.x=e.clientX/innerWidth-.5;mouse.y=e.clientY/innerHeight-.5},{passive:true});
+(function par(){
+  $$("#stack [data-d]").forEach(el=>{const d=+el.dataset.d;const tx=-mouse.x*d,ty=-mouse.y*d;
+    el.style.translate=`${tx.toFixed(1)}px ${ty.toFixed(1)}px`});
+  requestAnimationFrame(par);
+})();
+
+addEventListener("scroll",()=>$("#nav").classList.toggle("solid",scrollY>40),{passive:true});
+
+/* ---------- 3D: one hero latte cup + orbiting beans ---------- */
+const S={y:0,op:1,sc:0,spin:0};
+function init3D(){
+  if(!has3)return;
+  const canvas=$("#gl");
+  const R=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
+  R.setPixelRatio(Math.min(devicePixelRatio,2));R.outputEncoding=THREE.sRGBEncoding;
+  R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.1;
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(35,1,.1,50);cam.position.set(0,0,8);
+  scene.add(new THREE.HemisphereLight(0xffe7c4,0x120a05,.75));
+  const key=new THREE.DirectionalLight(0xffd8a8,2.3);key.position.set(3,5,5);scene.add(key);
+  const rim=new THREE.DirectionalLight(0xf7941d,3);rim.position.set(-4,2,-4);scene.add(rim);
+  const rim2=new THREE.DirectionalLight(0xffb357,1.6);rim2.position.set(4,1,-3);scene.add(rim2);
+  const STD=(c,r=.4,m=0)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+  const V=(x,y)=>new THREE.Vector2(x,y);
+
+  const hero=new THREE.Group();scene.add(hero);
+  const cupG=new THREE.Group();hero.add(cupG);
+  const cer=STD(0xf6f1ea,.26);
+  cupG.add(new THREE.Mesh(new THREE.LatheGeometry([V(0,0),V(.52,0),V(.58,.04),V(.62,.25),V(.72,.65),V(.82,1.05),V(.88,1.3),V(.86,1.34),V(.8,1.29),V(.74,1.04),V(.65,.62),V(.55,.2),V(0,.16)],120),cer));
+  const band=new THREE.Mesh(new THREE.TorusGeometry(.705,.024,16,120),STD(0xf7941d,.25,.5));band.rotation.x=Math.PI/2;band.position.y=.62;cupG.add(band);
+  const hd=new THREE.Mesh(new THREE.TorusGeometry(.3,.07,20,48,Math.PI*1.15),cer);hd.position.set(.86,.72,0);hd.rotation.z=-Math.PI/2-.25;cupG.add(hd);
+  const tc=document.createElement("canvas");tc.width=tc.height=512;const g=tc.getContext("2d");
+  const grd=g.createRadialGradient(256,256,40,256,256,256);grd.addColorStop(0,"#8f5833");grd.addColorStop(.75,"#5b331b");grd.addColorStop(1,"#38200f");g.fillStyle=grd;g.fillRect(0,0,512,512);
+  g.fillStyle="#f3e2c8";g.beginPath();g.moveTo(256,392);g.bezierCurveTo(118,300,128,158,220,163);g.bezierCurveTo(250,166,256,198,256,214);g.bezierCurveTo(256,198,262,166,292,163);g.bezierCurveTo(384,158,394,300,256,392);g.fill();
+  g.fillStyle="#7a4626";g.beginPath();g.ellipse(256,266,60,46,0,0,Math.PI*2);g.fill();g.fillStyle="#f3e2c8";g.beginPath();g.ellipse(256,273,32,24,0,0,Math.PI*2);g.fill();
+  const tex=new THREE.CanvasTexture(tc);tex.encoding=THREE.sRGBEncoding;
+  const coffee=new THREE.Mesh(new THREE.CircleGeometry(.79,96),new THREE.MeshStandardMaterial({map:tex,roughness:.12,metalness:.1}));coffee.rotation.x=-Math.PI/2;coffee.position.y=1.18;cupG.add(coffee);
+  const sau=new THREE.Mesh(new THREE.LatheGeometry([V(0,-.06),V(1.25,-.06),V(1.42,.02),V(1.5,.1),V(1.46,.12),V(1.3,.06),V(.62,.02),V(0,.02)],120),STD(0xefe7dc,.3));cupG.add(sau);
+  const sRim=new THREE.Mesh(new THREE.TorusGeometry(1.48,.018,10,120),STD(0xf7941d,.25,.6));sRim.rotation.x=Math.PI/2;sRim.position.y=.11;cupG.add(sRim);
+  cupG.position.y=-.55;
+
+  // steam
+  const sc=document.createElement("canvas");sc.width=sc.height=64;const s2=sc.getContext("2d");
+  const rg=s2.createRadialGradient(32,32,0,32,32,32);rg.addColorStop(0,"rgba(255,240,220,.9)");rg.addColorStop(1,"rgba(255,240,220,0)");s2.fillStyle=rg;s2.fillRect(0,0,64,64);
+  const N=60,sp=new Float32Array(N*3),sv=[];
+  for(let i=0;i<N;i++){sp[i*3]=(Math.random()-.5)*.5;sp[i*3+1]=.7+Math.random()*2;sp[i*3+2]=(Math.random()-.5)*.5;sv.push(.004+Math.random()*.005)}
+  const sg=new THREE.BufferGeometry();sg.setAttribute("position",new THREE.BufferAttribute(sp,3));
+  hero.add(new THREE.Points(sg,new THREE.PointsMaterial({size:.5,map:new THREE.CanvasTexture(sc),transparent:true,opacity:.16,depthWrite:false,blending:THREE.AdditiveBlending})));
+
+  // orbiting beans (just a few)
+  const bg=new THREE.SphereGeometry(.13,28,18);bg.scale(1,.68,1.45);
+  const bm=STD(0x5a3218,.38,.05),gm=STD(0x24110a,.8);
+  const beans=[];
+  for(let i=0;i<4;i++){const b=new THREE.Group();b.add(new THREE.Mesh(bg,bm));
+    const gr=new THREE.Mesh(new THREE.BoxGeometry(.02,.012,.3),gm);gr.position.y=.085;b.add(gr);
+    b.userData={a:i/4*Math.PI*2,r:1.95+(i%2)*.2,s:.9+(i%3)*.15};b.rotation.set(Math.random()*6,Math.random()*6,0);hero.add(b);beans.push(b)}
+
+  // soft contact shadow
+  const shc=document.createElement("canvas");shc.width=shc.height=128;const s3=shc.getContext("2d");
+  const rg3=s3.createRadialGradient(64,64,0,64,64,64);rg3.addColorStop(0,"rgba(0,0,0,.7)");rg3.addColorStop(1,"rgba(0,0,0,0)");s3.fillStyle=rg3;s3.fillRect(0,0,128,128);
+  const shadow=new THREE.Mesh(new THREE.PlaneGeometry(4,4),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(shc),transparent:true,depthWrite:false}));
+  shadow.rotation.x=-Math.PI/2;shadow.position.y=-.66;hero.add(shadow);
+
+  const anchor=$("#cupAnchor"),tmp=new THREE.Vector3(),dir=new THREE.Vector3();
+  const halfH=8*Math.tan(17.5*Math.PI/180);
+  function resize(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
+  resize();addEventListener("resize",resize);
+  let t=0;
+  (function loop(){
+    requestAnimationFrame(loop);
+    const r=anchor.getBoundingClientRect(),vis=r.bottom>-80&&r.top<innerHeight+80;
+    canvas.style.opacity=vis?S.op:0;if(!vis)return;
+    t+=.016;
+    cam.updateMatrixWorld();
+    tmp.set((r.left+r.width/2)/innerWidth*2-1,-((r.top+r.height/2)/innerHeight*2-1),.5).unproject(cam);
+    dir.copy(tmp).sub(cam.position).normalize();
+    const d=-cam.position.z/dir.z;
+    hero.position.copy(cam.position).addScaledVector(dir,d);hero.position.y+=Math.sin(t*1.1)*.04;
+    const worldH=r.height/innerHeight*2*halfH;
+    hero.scale.setScalar(worldH/3.1*S.sc);
+    hero.rotation.x=.38+mouse.y*.16;
+    cupG.rotation.y=t*.22+mouse.x*.7+S.spin;
+    hero.rotation.z=-mouse.x*.06;
+    beans.forEach((b,i)=>{const u=b.userData,a=u.a+t*.32;
+      b.position.set(Math.cos(a)*u.r,.35+Math.sin(a*2)*.12,Math.sin(a)*u.r*.9);b.scale.setScalar(u.s);
+      b.rotation.x+=.012;b.rotation.y+=.008});
+    const p=sg.attributes.position.array;
+    for(let i=0;i<N;i++){p[i*3+1]+=sv[i];p[i*3]+=Math.sin(t*2+i)*.002;if(p[i*3+1]>2.9){p[i*3+1]=.7;p[i*3]=(Math.random()-.5)*.4;p[i*3+2]=(Math.random()-.5)*.4}}
+    sg.attributes.position.needsUpdate=true;
+    cam.position.x+=(mouse.x*.5-cam.position.x)*.05;cam.position.y+=(-mouse.y*.3-cam.position.y)*.05;cam.lookAt(0,0,0);
+    R.render(scene,cam);
+  })();
+}
+
+/* our-story hover image that follows the cursor */
+(function(){
+  const box=$("#fimg"),imgs=$$("#fimg img");let tx=0,ty=0,x=0,y=0,vx=0,active=false;
+  $$(".frow").forEach(r=>{
+    r.addEventListener("pointerenter",()=>{if(innerWidth<900)return;active=true;box.classList.add("on");imgs.forEach((im,k)=>im.classList.toggle("on",k==r.dataset.img))});
+    r.addEventListener("pointerleave",()=>{active=false;box.classList.remove("on")});
+  });
+  addEventListener("pointermove",e=>{tx=e.clientX;ty=e.clientY},{passive:true});
+  (function f(){const nx=x+(tx-x)*.14;vx=nx-x;x=nx;y+=(ty-y)*.14;
+    box.style.transform=`translate(${x+36}px,${y-145}px) rotate(${Math.max(-12,Math.min(12,vx*.5))}deg)`;requestAnimationFrame(f)})();
+})();
+/* collage photos drift with the mouse */
+(function p(){$$(".stage .pc").forEach(el=>{const d=+el.dataset.d;el.style.translate=`${(-mouse.x*d).toFixed(1)}px ${(-mouse.y*d).toFixed(1)}px`});requestAnimationFrame(p)})();
+
+/* hero category chips -> menu tab */
+$$(".chip").forEach(c=>c.onclick=()=>{renderMenu(c.dataset.cat);const m=$("#menu");lenis?lenis.scrollTo(m,{offset:-70,duration:1.4}):m.scrollIntoView({behavior:"smooth"})});
+
+/* ---------- testimonials slider ---------- */
+const slides=$$(".slide");let si=0,stl=null;
+slides.forEach(s=>{const q=document.createElement("q");q.innerHTML=s.dataset.q.split(" ").map(w=>`<span class="w"><span>${esc(w)}</span></span>`).join(" ");s.prepend(q)});
+function showSlide(i){
+  slides[si].classList.remove("on");si=(i+slides.length)%slides.length;const s=slides[si];s.classList.add("on");
+  $("#cur").textContent=String(si+1).padStart(2,"0");
+  $$("#prog i b").forEach((b,k)=>{if(hasG)gsap.killTweensOf(b);b.style.transform=`scaleX(${k<si?1:0})`});
+  if(hasG){
+    gsap.fromTo(s.querySelectorAll(".w>span"),{yPercent:110},{yPercent:0,duration:.9,stagger:.025,ease:"expo.out"});
+    gsap.fromTo(s.querySelector(".who"),{opacity:0,y:16},{opacity:1,y:0,duration:.7,delay:.3});
+    stl&&stl.kill();
+    stl=gsap.to($$("#prog i b")[si],{scaleX:1,duration:7,ease:"none",onComplete:()=>showSlide(si+1)});
+  }
+}
+$("#next").onclick=()=>showSlide(si+1);$("#prev").onclick=()=>showSlide(si-1);
+$$("#prog i").forEach((p,k)=>p.onclick=()=>showSlide(k));
+
+/* ---------- motion ---------- */
+function initMotion(){
+  if(typeof Lenis!=="undefined"){
+    lenis=new Lenis({lerp:.085,smoothWheel:true});
+    if(hasG){lenis.on("scroll",ScrollTrigger.update);gsap.ticker.add(t=>lenis.raf(t*1000));gsap.ticker.lagSmoothing(0)}
+    else{(function r(t){lenis.raf(t);requestAnimationFrame(r)})(0)}
+    $$('a[href^="#"]').forEach(a=>a.addEventListener("click",e=>{const id=a.getAttribute("href");if(id.length>1&&$(id)){e.preventDefault();lenis.scrollTo(id,{offset:-70,duration:1.4})}}));
+  }
+  $("#toTop").onclick=()=>lenis?lenis.scrollTo(0,{duration:1.8}):scrollTo({top:0,behavior:"smooth"});
+  if(!hasG){$$(".rv").forEach(e=>{e.style.opacity=1;e.style.transform="none"});$("#wmFill").style.clipPath="none";return}
+
+  // hero entrance
+  const tl=gsap.timeline({delay:.1});
+  tl.from(".hh1 .ln>span",{yPercent:110,duration:1.2,stagger:.1,ease:"expo.out"},0)
+    .from(".hi-in",{opacity:0,y:24,duration:1,stagger:.08,ease:"power3.out"},.25)
+    .fromTo(".vphoto",{clipPath:"inset(12% 10% 12% 10% round 32px)",opacity:0},{clipPath:"inset(0% 0% 0% 0% round 32px)",opacity:1,duration:1.6,ease:"expo.out"},.1)
+    .to(".vphoto img",{scale:1,duration:2.2,ease:"expo.out"},.1)
+    .from(".vtag,.best",{opacity:0,y:20,scale:.9,duration:.9,stagger:.12,ease:"back.out(1.7)"},.8)
+    .to(S,{sc:1,duration:1.6,ease:"expo.out"},.6)
+    .from(S,{spin:-3,duration:2,ease:"expo.out"},.6);
+  gsap.to(".vphoto img",{yPercent:8,ease:"none",scrollTrigger:{trigger:".hero",start:"top top",end:"bottom top",scrub:true}});
+
+  // doors: open on scroll, then the collage settles in
+  const dt={trigger:"#reveal",start:"top top",end:"55% bottom",scrub:1};
+  gsap.to("#doorL",{rotateY:-108,ease:"power2.in",scrollTrigger:dt});
+  gsap.to("#doorR",{rotateY:108,ease:"power2.in",scrollTrigger:dt});
+  gsap.to("#glow",{width:"140vw",opacity:0,ease:"power1.in",scrollTrigger:dt});
+  gsap.to("#hintdoor",{opacity:0,ease:"none",scrollTrigger:{trigger:"#reveal",start:"top top",end:"8% top",scrub:true}});
+  gsap.from(".stage .pc",{scale:.7,opacity:0,y:60,stagger:.05,ease:"none",scrollTrigger:{trigger:"#reveal",start:"18% top",end:"52% top",scrub:1}});
+  gsap.from(".stage-t>*",{opacity:0,y:40,stagger:.06,ease:"none",scrollTrigger:{trigger:"#reveal",start:"22% top",end:"48% top",scrub:1}});
+  gsap.from(".stage",{scale:1.12,ease:"none",scrollTrigger:{trigger:"#reveal",start:"top top",end:"55% top",scrub:1}});
+
+  $$(".rv").forEach(el=>gsap.to(el,{opacity:1,y:0,duration:1.1,ease:"power3.out",scrollTrigger:{trigger:el,start:"top 88%"}}));
+
+  // horizontal gallery
+  if(innerWidth>800){
+    const tr=$("#gtrack");
+    gsap.to(tr,{x:()=>-(tr.scrollWidth-innerWidth+60),ease:"none",
+      scrollTrigger:{trigger:"#inside",start:"top top",end:()=>"+="+(tr.scrollWidth-innerWidth+60),pin:true,scrub:1,invalidateOnRefresh:true}});
+    $$(".gi img").forEach(im=>gsap.fromTo(im,{scale:1.18},{scale:1,ease:"none",scrollTrigger:{trigger:"#inside",start:"top top",end:"+=1500",scrub:true}}));
+  }
+
+  // counters
+  $$("[data-count]").forEach(el=>{const n=+el.dataset.count,o={v:0};
+    gsap.to(o,{v:n,duration:2,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 90%"},onUpdate:()=>el.textContent=Math.round(o.v)})});
+
+  // testimonials
+  ScrollTrigger.create({trigger:"#reviews",start:"top 60%",once:true,onEnter:()=>showSlide(0)});
+  gsap.to(".polaroid",{rotate:3,y:-30,ease:"none",scrollTrigger:{trigger:"#reviews",start:"top bottom",end:"bottom top",scrub:true}});
+
+  // footer
+  gsap.fromTo(".fcta .bg img",{scale:1.25},{scale:1,ease:"none",scrollTrigger:{trigger:".fcta",start:"top bottom",end:"bottom top",scrub:true}});
+  gsap.from(".ig",{opacity:0,y:40,stagger:.07,duration:.9,ease:"power3.out",scrollTrigger:{trigger:".igrid",start:"top 90%"}});
+  gsap.to("#wmFill",{clipPath:"inset(0 0% 0 0)",ease:"none",scrollTrigger:{trigger:"#wordmark",start:"top 95%",end:"bottom 85%",scrub:1}});
+}
+
+/* loader */
+(function(){
+  const bar=$("#lbar");let p=0;
+  const iv=setInterval(()=>{p=Math.min(100,p+9+Math.random()*14);bar.style.width=p+"%";if(p>=100){clearInterval(iv);done()}},90);
+  function done(){
+    if(hasG)gsap.to("#loader",{yPercent:-100,duration:1,ease:"expo.inOut",onComplete:()=>$("#loader").remove()});else $("#loader").remove();
+    initMotion();
+  }
+  init3D();
+})();
+
+/* ---------- Priya chat ---------- */
+let sample=null,chist=[],cbusy=false,greeted=false;
+(async()=>{try{if(window.claude&&window.claude.use)sample=await window.claude.use("sample")}catch(e){sample=null}})();
+const PROMPT=`You are Priya, the friendly website assistant for DG Cafe & Resto, Chiplun.
+FACTS (only these): Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605. Phone/WhatsApp 096650 60568. Open 11 AM–11 PM daily (holiday hours may vary). About ₹400 for two. Ample parking, music, family-friendly, delivery on Zomato. Dessert counter with pastries, tarts and dessert cups.
+Menu with prices: ${Object.values(MENU).flat().filter(x=>x[1]).map(x=>x[0]+" ₹"+x[1]).join(", ")}.
+Also on menu (price: ask staff): ${Object.values(MENU).flat().filter(x=>!x[1]).map(x=>x[0]).join(", ")}. Also North Indian, Chinese, biryani, kebabs.
+Rules: reply in the customer's language (Marathi, Hindi, English, Hinglish). 1–3 short sentences, at most one emoji. Never invent prices or offers. For table bookings, point them to the "Reserve a table" form on this page or WhatsApp 096650 60568.`;
+function cadd(t,who){const d=document.createElement("div");d.className="cm "+who;d.textContent=t;$("#cmsgs").appendChild(d);$("#cmsgs").scrollTop=1e9}
+function toggleChat(){const c=$("#chat");c.classList.toggle("open");if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
+function openChat(){if(!$("#chat").classList.contains("open"))toggleChat()}
+function greet(){if(greeted)return;greeted=true;cadd("नमस्कार! 👋 I'm Priya from DG Cafe. Ask me about the menu, timings or bookings, in Marathi, Hindi or English.","bot");
+  $("#cchips").innerHTML=["Pizza prices?","आज किती वाजेपर्यंत उघडं?","Best dessert?","Parking hai?"].map(q=>`<button>${q}</button>`).join("");
+  $$("#cchips button").forEach(b=>b.onclick=()=>csend(b.textContent))}
+function fb(q){const t=q.toLowerCase(),h=(...k)=>k.some(x=>t.includes(x));
+  if(h("pizza"))return MENU.Pizza.filter(x=>x[1]).map(x=>`${x[0]} ₹${x[1]}`).join("\n");
+  if(h("time","open","close","baje","वाजे","बजे","किती"))return "We're open every day, 11 AM to 11 PM 😊";
+  if(h("dessert","brownie","sweet","pastry","truffle"))return "Try the Dutch Truffle Pastry (₹80) or the Sizzling Brownie (₹169)!";
+  if(h("park","पार्किंग"))return "Yes, there's ample parking right at Dhaval Plaza.";
+  if(h("book","table","टेबल"))return "Use the Reserve a table form on this page, or WhatsApp us on 096650 60568.";
+  if(h("where","address","kaha","पत्ता","कुठे"))return "Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605.";
+  return "Our team can help with that. Call or WhatsApp 096650 60568.";}
+async function csend(q){
+  q=(q??$("#cin").value).trim();if(!q||cbusy)return;$("#cin").value="";cadd(q,"me");chist.push({role:"user",content:q});cbusy=true;
+  const ty=document.createElement("div");ty.className="cm bot";ty.textContent="…";$("#cmsgs").appendChild(ty);
+  let r="";
+  if(sample){try{const cv=chist.slice(-12).map(x=>({...x}));while(cv[0].role!=="user")cv.shift();cv[0]={role:"user",content:PROMPT+"\n\n---\nCustomer: "+cv[0].content};
+    r=((await sample(cv,{modelTier:"quick",cache:false})).text||"").trim()}catch(e){if(e&&e.code==="not_granted")sample=null}}
+  if(!r)r=fb(q);
+  ty.remove();cadd(r,"bot");chist.push({role:"assistant",content:r});cbusy=false;
+}
+$("#cin").addEventListener("keydown",e=>{if(e.key==="Enter")csend()});
+</script>
+</body>
+</html>
