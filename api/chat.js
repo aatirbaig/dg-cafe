@@ -88,7 +88,8 @@ async function claude(key, msgs) {
 }
 
 module.exports = async (req, res) => {
-  if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
+  const ping = req.method === "GET" && req.query && req.query.ping === "1"; // health check: GET /api/chat?ping=1
+  if (req.method !== "POST" && !ping) return res.status(405).json({ error: "method_not_allowed" });
   const providers = [
     [process.env.GEMINI_API_KEY, gemini],
     [process.env.GROQ_API_KEY, groq],
@@ -99,7 +100,7 @@ module.exports = async (req, res) => {
   const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "anon";
   if (limited(ip)) return res.status(429).json({ error: "rate_limited" });
 
-  let body = req.body;
+  let body = ping ? { messages: [{ role: "user", content: "Aaj kitne baje tak khula hai?" }] } : req.body;
   if (typeof body === "string") { try { body = JSON.parse(body); } catch { body = {}; } }
   let msgs = Array.isArray(body && body.messages) ? body.messages : [];
   msgs = msgs
