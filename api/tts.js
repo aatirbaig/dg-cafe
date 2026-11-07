@@ -61,9 +61,10 @@ module.exports = async (req, res) => {
   if (!text) return res.status(400).json({ error: "bad_request" });
 
   try {
-    let hit = cache.get(text);
+    const t0 = Date.now();
+    let hit = (ping && req.query.nocache) ? null : cache.get(text);
     if (!hit) { hit = await synth(key, text); if (cache.size > 200) cache.clear(); cache.set(text, hit); }
-    if (ping) return res.status(200).json({ ok: true, model: hit.model, bytes: hit.audio.length });
+    if (ping) return res.status(200).json({ ok: true, model: hit.model, bytes: hit.audio.length, ms: Date.now() - t0 });
     res.setHeader("content-type", "audio/wav");
     res.setHeader("cache-control", "public, max-age=86400");
     return res.status(200).send(hit.audio);

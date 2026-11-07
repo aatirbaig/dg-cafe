@@ -42,6 +42,7 @@ function limited(ip) {
   return arr.length > 20;
 }
 
+let lastModel = "";
 async function gemini(key, msgs) {
   const models = [process.env.GEMINI_MODEL, "gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.5-flash-lite"].filter(Boolean);
   const body = JSON.stringify({
@@ -56,6 +57,7 @@ async function gemini(key, msgs) {
     });
     const j = await r.json().catch(() => ({}));
     if (r.ok) {
+      lastModel = model;
       const parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
       const text = parts.filter(p => p.text && !p.thought).map(p => p.text).join("").trim();
       if (text) return text;
@@ -110,10 +112,11 @@ module.exports = async (req, res) => {
   while (msgs.length && msgs[0].role !== "user") msgs.shift();
   if (!msgs.length || msgs[msgs.length - 1].role !== "user") return res.status(400).json({ error: "bad_request" });
 
+  const t0 = Date.now();
   for (const [key, fn] of providers) {
     try {
       const reply = await fn(key, msgs);
-      if (reply) return res.status(200).json({ reply });
+      if (reply) return res.status(200).json(ping ? { reply, ms: Date.now() - t0, model: lastModel } : { reply });
     } catch (e) {
       console.error(e.message, JSON.stringify(e.detail || {}));
     }
