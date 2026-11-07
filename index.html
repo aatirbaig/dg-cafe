@@ -616,12 +616,12 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
   <div class="wordmark" id="wordmark"><span class="o">DG CAFE</span><span class="f" id="wmFill">DG CAFE</span></div>
   <div class="wrap fbot">
     <span>© 2026 DG Cafe &amp; Resto, Chiplun. All rights reserved.</span>
-    <span>Website &amp; AI by <b>Caelion</b></span>
+    <span>Website &amp; AI by <b>Caelion</b> · <span style="font-size:11.5px">Music: Salamander Grand Piano by Alexander Holm, <a href="http://creativecommons.org/licenses/by/3.0/" rel="noopener" style="text-decoration:underline">CC BY 3.0</a></span></span>
     <button class="top" id="toTop">Back to top ↑</button>
   </div>
 </footer>
 
-<button id="musicBtn" aria-label="Cafe music"><span class="eq"><i></i><i></i><i></i><i></i></span><span class="mt"><span id="musicTxt">Play cafe music</span><small>Soft lo-fi · tap to toggle</small></span></button>
+<button id="musicBtn" aria-label="Cafe music"><span class="eq"><i></i><i></i><i></i><i></i></span><span class="mt"><span id="musicTxt">Play cafe music</span><small>Bossa jazz piano · tap to toggle</small></span></button>
 <button id="fab" onclick="toggleChat()"><span class="avt">P</span>Ask Priya</button>
 <div id="chat">
   <div class="ch" id="chHead"><span class="avwrap"><span class="logo" style="width:38px;height:38px;font-size:13px;border-width:2px">DG<small>CAFE</small></span></span><div><b>Priya · DG Cafe</b><small id="priyaState">● Replies instantly</small></div><button class="vbtn on" id="voiceBtn" title="Priya's voice on/off" aria-label="Toggle Priya's voice"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button><button onclick="toggleChat()">×</button></div>
@@ -970,43 +970,52 @@ try{speechSynthesis.getVoices()}catch(e){}
 
 /* ---------- Cafe music: generative lo-fi (no audio files, no copyright) ---------- */
 const Music={on:false,ready:false,ducked:false,master:null};
-const LOUD=-9,DUCKED=-22,SILENT=-60;
+const LOUD=-3,DUCKED=-18,SILENT=-60;
 let musicInitP=null;
 function musicInit(){if(typeof Tone==="undefined")return Promise.resolve(false);return musicInitP||(musicInitP=buildMusic())}
 async function buildMusic(){
+  // Bossa-nova cafe jazz on a real sampled grand piano (Salamander Grand Piano, CC BY 3.0)
   await Tone.start();const T=Tone;
-  T.Transport.bpm.value=72;T.Transport.swing=.2;T.Transport.swingSubdivision="8n";
+  T.Transport.bpm.value=86;T.Transport.swing=0;
   const master=new T.Volume(SILENT).toDestination();Music.master=master;
-  const comp=new T.Compressor(-22,3).connect(master);
-  const rev=new T.Reverb({decay:3.4,wet:.33});await rev.generate();rev.connect(comp);
-  const warm=new T.Filter(1700,"lowpass").connect(rev);
-  const chorus=new T.Chorus(1.6,2.4,.35).start().connect(warm);
-  const trem=new T.Tremolo(3.2,.32).start().connect(chorus);
-  const ep=new T.PolySynth(T.FMSynth,{harmonicity:3,modulationIndex:1.5,oscillator:{type:"sine"},modulation:{type:"sine"},
-    envelope:{attack:.008,decay:1.6,sustain:.22,release:1.8},modulationEnvelope:{attack:.01,decay:.5,sustain:.08,release:.6}}).connect(trem);ep.volume.value=-11;
-  const bass=new T.MonoSynth({oscillator:{type:"sine"},envelope:{attack:.02,decay:.5,sustain:.5,release:.7},filterEnvelope:{baseFrequency:110,octaves:1.4}}).connect(comp);bass.volume.value=-10;
-  const kick=new T.MembraneSynth({pitchDecay:.035,octaves:4,envelope:{attack:.001,decay:.3,sustain:0}}).connect(comp);kick.volume.value=-15;
-  const hat=new T.NoiseSynth({noise:{type:"white"},envelope:{attack:.001,decay:.035,sustain:0}}).connect(new T.Filter(7500,"highpass").connect(rev));hat.volume.value=-31;
-  const rim=new T.NoiseSynth({noise:{type:"pink"},envelope:{attack:.002,decay:.12,sustain:0}}).connect(new T.Filter(1900,"bandpass").connect(rev));rim.volume.value=-23;
-  const bell=new T.FMSynth({harmonicity:4,modulationIndex:2.5,envelope:{attack:.005,decay:1.4,sustain:0,release:1.2}}).connect(rev);bell.volume.value=-25;
-  const vinyl=new T.Noise("pink");vinyl.connect(new T.Filter(3000,"highpass").connect(comp));vinyl.volume.value=-47;vinyl.start();
-  const crackle=new T.NoiseSynth({noise:{type:"white"},envelope:{attack:.0005,decay:.006,sustain:0}}).connect(comp);crackle.volume.value=-34;
-  const chords=[["F3","A3","C4","E4","G4"],["E3","G3","B3","D4","F#4"],["D3","F3","A3","C4","E4"],["C3","E3","G3","B3","D4"]];
-  const roots=["F2","E2","D2","C2"],fifths=["C3","B2","A2","G2"],mel=["E5","G5","A5","C6","D5","B4"];
-  let bar=0;
-  new T.Loop(time=>{const i=bar%4,c=chords[i];
-    c.forEach((n,k)=>ep.triggerAttackRelease(n,"1m",time+k*.02+Math.random()*.01,.45+Math.random()*.12));
-    if(bar%2)c.slice(2).forEach((n,k)=>ep.triggerAttackRelease(n,"4n",time+T.Time("2n").toSeconds()+T.Time("8n").toSeconds()+k*.015,.28));
-    bass.triggerAttackRelease(roots[i],"4n.",time,.85);
-    bass.triggerAttackRelease(fifths[i],"8n",time+T.Time("2n").toSeconds()+T.Time("8n").toSeconds(),.55);
-    bar++;},"1m").start(0);
-  new T.Sequence((time,step)=>{
-    if(step===0||step===5)kick.triggerAttackRelease("C1","8n",time,.75);
-    if(step===2||step===6)rim.triggerAttackRelease("16n",time,.45);
-    hat.triggerAttackRelease("32n",time,step%2?.22:.4);
-    if(Math.random()<.16)bell.triggerAttackRelease(mel[Math.floor(Math.random()*mel.length)],"8n",time,.35);
-    if(Math.random()<.5)crackle.triggerAttackRelease("64n",time+Math.random()*.2,Math.random()*.6);
-  },[0,1,2,3,4,5,6,7],"8n").start(0);
+  const comp=new T.Compressor(-20,2.5).connect(master);
+  const rev=new T.Reverb({decay:2.6,preDelay:.02,wet:.24});await rev.generate();rev.connect(comp);
+  const tone=new T.Filter(5200,"lowpass").connect(rev);
+  const names=["A1","C2","Ds2","Fs2","A2","C3","Ds3","Fs3","A3","C4","Ds4","Fs4","A4","C5","Ds5","Fs5","A5","C6","Ds6"];
+  const urls={};names.forEach(n=>urls[n.replace("s","#")]=n+".mp3");
+  const piano=await new Promise((ok,bad)=>{const sm=new T.Sampler({urls,baseUrl:"audio/piano/",release:1.2,onload:()=>ok(sm),onerror:bad});setTimeout(()=>bad("timeout"),20000)});
+  piano.connect(tone);piano.volume.value=-4;
+  // soft percussion: shaker, rim click, felt kick
+  const shaker=new T.NoiseSynth({noise:{type:"white"},envelope:{attack:.004,decay:.05,sustain:0}}).connect(new T.Filter(6500,"highpass").connect(rev));shaker.volume.value=-34;
+  const rim=new T.MembraneSynth({pitchDecay:.008,octaves:2,envelope:{attack:.001,decay:.07,sustain:0}}).connect(new T.Filter(1200,"highpass").connect(rev));rim.volume.value=-26;
+  const kick=new T.MembraneSynth({pitchDecay:.04,octaves:3,envelope:{attack:.002,decay:.28,sustain:0}}).connect(comp);kick.volume.value=-20;
+  const room=new T.Noise("brown");room.connect(new T.Filter(900,"lowpass").connect(comp));room.volume.value=-54;room.start();
+  // I–vi–ii–V | iii–VI7–ii–V in C, warm rootless voicings
+  const prog=[
+    {b:"C2",f:"G2",v:["E3","G3","B3","D4"]},{b:"A1",f:"E2",v:["G3","B3","C4","E4"]},
+    {b:"D2",f:"A2",v:["F3","A3","C4","E4"]},{b:"G2",f:"D2",v:["F3","A3","B3","E4"]},
+    {b:"E2",f:"B2",v:["G3","B3","D4","F#4"]},{b:"A1",f:"E2",v:["G3","C#4","E4","B4"]},
+    {b:"D2",f:"A2",v:["F3","A3","C4","E4"]},{b:"G2",f:"D2",v:["F3","B3","D4","G4"]}];
+  // composed melody: [bar, 16th-step, note, length in 16ths]
+  const mel=[[0,0,"E5",6],[0,6,"D5",2],[0,8,"E5",2],[0,10,"G5",6],[1,0,"A5",4],[1,4,"G5",2],[1,6,"E5",10],
+    [2,0,"F5",6],[2,6,"E5",2],[2,8,"D5",4],[2,12,"C5",4],[3,0,"B4",8],[3,8,"D5",4],[3,12,"G5",4],
+    [4,0,"G5",6],[4,6,"E5",2],[4,8,"D5",4],[4,12,"B4",4],[5,0,"C#5",4],[5,4,"E5",4],[5,8,"G5",8],
+    [6,0,"F5",6],[6,6,"A5",2],[6,8,"G5",2],[6,10,"F5",2],[6,12,"E5",4],[7,0,"D5",12]];
+  const comp16=[0,3,6,10,13], clave=[0,3,6,10,12];
+  const s16=T.Time("16n").toSeconds();
+  let step=0;
+  new T.Loop(time=>{
+    const bar=Math.floor(step/16)%8,st=step%16,cycle=Math.floor(step/128),ch=prog[bar],hum=()=>Math.random()*.012;
+    if(st===0)piano.triggerAttackRelease(ch.b,"2n",time+hum(),.62);
+    if(st===8)piano.triggerAttackRelease(ch.f,"4n",time+hum(),.5);
+    if(st===14&&Math.random()<.5)piano.triggerAttackRelease(ch.b,"16n",time,.32);
+    if(comp16.includes(st))ch.v.forEach((n,k)=>piano.triggerAttackRelease(n,st===0?"4n":"8n",time+k*.008+hum(),(st===0?.42:.34)+Math.random()*.06));
+    if(cycle%2===1)mel.forEach(([mb,ms,n,len])=>{if(mb===bar&&ms===st)piano.triggerAttackRelease(n,len*s16*1.05,time+hum(),.5+Math.random()*.1)});
+    shaker.triggerAttackRelease("32n",time,st%4===2?.55:st%2?.22:.35);
+    if(clave.includes(st))rim.triggerAttackRelease("A5","32n",time,.5);
+    if(st===0||st===8)kick.triggerAttackRelease("A1","8n",time,st?.4:.6);
+    step++;
+  },"16n").start(0);
   Music.ready=true;return true;
 }
 function musicUI(){$("#musicBtn").classList.toggle("on",Music.on);$("#musicTxt").textContent=Music.on?"Cafe music on":"Play cafe music"}
