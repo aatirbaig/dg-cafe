@@ -1,7 +1,8 @@
 // DG Cafe · "Ask Priya" chat backend (Vercel serverless function)
-// Needs one environment variable in Vercel → Project → Settings → Environment Variables:
-//   ANTHROPIC_API_KEY = your Claude API key
-// Optional: PRIYA_MODEL (defaults to claude-haiku-5-5)
+// Add ONE of these in Vercel → Project → Settings → Environment Variables (tried in this order):
+//   GEMINI_API_KEY     free key from https://aistudio.google.com/apikey   (optional GEMINI_MODEL)
+//   GROQ_API_KEY       free key from https://console.groq.com/keys         (optional GROQ_MODEL)
+//   ANTHROPIC_API_KEY  paid Claude key                                    (optional PRIYA_MODEL)
 
 const MENU = {
   "Pizza": [["Margherita Pizza", 300], ["Corn & Cheese Pizza", 219], ["Paneer Tikka Pizza", 239], ["Chicken Tikka Pizza", 279], ["Farmhouse Pizza"], ["BBQ Paneer Pizza"]],
@@ -41,10 +42,59 @@ function limited(ip) {
   return arr.length > 20;
 }
 
+async function gemini(key, msgs) {
+  const models = [process.env.GEMINI_MODEL, "gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.5-flash-lite"].filter(Boolean);
+  const body = JSON.stringify({
+    systemInstruction: { parts: [{ text: SYSTEM }] },
+    contents: msgs.map(m => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] })),
+    generationConfig: { maxOutputTokens: 800, temperature: 0.6 }
+  });
+  let last;
+  for (const model of models) {
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+      method: "POST", headers: { "content-type": "application/json", "x-goog-api-key": key }, body
+    });
+    const j = await r.json().catch(() => ({}));
+    if (r.ok) {
+      const parts = (((j.candidates || [])[0] || {}).content || {}).parts || [];
+      const text = parts.filter(p => p.text && !p.thought).map(p => p.text).join("").trim();
+      if (text) return text;
+    }
+    last = { status: r.status, error: j.error && j.error.message };
+    if (r.status === 429 || r.status === 401 || r.status === 403) break; // quota or bad key: trying other models won't help
+  }
+  throw Object.assign(new Error("gemini_failed"), { detail: last });
+}
+
+async function groq(key, msgs) {
+  const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST", headers: { "content-type": "application/json", authorization: `Bearer ${key}` },
+    body: JSON.stringify({ model: process.env.GROQ_MODEL || "openai/gpt-oss-120b", max_tokens: 700, temperature: 0.6,
+      messages: [{ role: "system", content: SYSTEM }, ...msgs] })
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error("groq_failed"), { detail: { status: r.status, error: j.error && j.error.message } });
+  return ((((j.choices || [])[0] || {}).message || {}).content || "").trim();
+}
+
+async function claude(key, msgs) {
+  const r = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST", headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
+    body: JSON.stringify({ model: process.env.PRIYA_MODEL || "claude-haiku-5-5", max_tokens: 300, system: SYSTEM, messages: msgs })
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw Object.assign(new Error("claude_failed"), { detail: { status: r.status, error: j.error } });
+  return (j.content || []).filter(c => c.type === "text").map(c => c.text).join("").trim();
+}
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") return res.status(405).json({ error: "method_not_allowed" });
-  const key = process.env.ANTHROPIC_API_KEY;
-  if (!key) return res.status(503).json({ error: "not_configured" });
+  const providers = [
+    [process.env.GEMINI_API_KEY, gemini],
+    [process.env.GROQ_API_KEY, groq],
+    [process.env.ANTHROPIC_API_KEY, claude]
+  ].filter(([k]) => k);
+  if (!providers.length) return res.status(503).json({ error: "not_configured" });
 
   const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "anon";
   if (limited(ip)) return res.status(429).json({ error: "rate_limited" });
@@ -59,18 +109,13 @@ module.exports = async (req, res) => {
   while (msgs.length && msgs[0].role !== "user") msgs.shift();
   if (!msgs.length || msgs[msgs.length - 1].role !== "user") return res.status(400).json({ error: "bad_request" });
 
-  try {
-    const r = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-api-key": key, "anthropic-version": "2023-06-01" },
-      body: JSON.stringify({ model: process.env.PRIYA_MODEL || "claude-haiku-5-5", max_tokens: 300, system: SYSTEM, messages: msgs })
-    });
-    const j = await r.json();
-    if (!r.ok) { console.error("anthropic_error", r.status, j && j.error); return res.status(502).json({ error: "upstream" }); }
-    const reply = (j.content || []).filter(c => c.type === "text").map(c => c.text).join("").trim();
-    return res.status(200).json({ reply });
-  } catch (e) {
-    console.error("chat_failed", e);
-    return res.status(502).json({ error: "upstream" });
+  for (const [key, fn] of providers) {
+    try {
+      const reply = await fn(key, msgs);
+      if (reply) return res.status(200).json({ reply });
+    } catch (e) {
+      console.error(e.message, JSON.stringify(e.detail || {}));
+    }
   }
+  return res.status(502).json({ error: "upstream" });
 };
