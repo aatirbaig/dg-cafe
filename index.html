@@ -922,7 +922,7 @@ Rules: reply in the customer's language (Marathi, Hindi, English, Hinglish). 1�
 function cadd(t,who){const d=document.createElement("div");d.className="cm "+who;d.textContent=t;
   if(who==="bot"){const b=document.createElement("button");b.className="say";b.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Listen';b.onclick=()=>speak(t,true);d.appendChild(document.createElement("br"));d.appendChild(b)}
   $("#cmsgs").appendChild(d);$("#cmsgs").scrollTop=1e9}
-function toggleChat(){const c=$("#chat");c.classList.toggle("open");document.body.classList.toggle("chat-open",c.classList.contains("open"));if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
+function toggleChat(){const c=$("#chat");c.classList.toggle("open");document.body.classList.toggle("chat-open",c.classList.contains("open"));if(!c.classList.contains("open"))stopSpeak();if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
 function openChat(){if(!$("#chat").classList.contains("open"))toggleChat()}
 function greet(){if(greeted)return;greeted=true;const g="नमस्कार! 👋 I'm Priya from DG Cafe. Ask me about the menu, timings or bookings, in Marathi, Hindi or English.";cadd(g,"bot");speak(g);
   $("#cchips").innerHTML=["Pizza prices?","आज किती वाजेपर्यंत उघडं?","Best dessert?","Parking hai?"].map(q=>`<button>${q}</button>`).join("");
@@ -936,7 +936,7 @@ function fb(q){const t=q.toLowerCase(),h=(...k)=>k.some(x=>t.includes(x));
   if(h("where","address","kaha","पत्ता","कुठे"))return "Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605.";
   return "Our team can help with that. Call or WhatsApp 096650 60568.";}
 async function csend(q){
-  q=(q??$("#cin").value).trim();if(!q||cbusy)return;$("#cin").value="";cadd(q,"me");chist.push({role:"user",content:q});cbusy=true;
+  q=(q??$("#cin").value).trim();if(!q||cbusy)return;stopSpeak();$("#cin").value="";cadd(q,"me");chist.push({role:"user",content:q});cbusy=true;
   const ty=document.createElement("div");ty.className="cm bot";ty.textContent="…";$("#cmsgs").appendChild(ty);
   let r="";
   if(sample){try{const cv=chist.slice(-12).map(x=>({...x}));while(cv[0].role!=="user")cv.shift();cv[0]={role:"user",content:PROMPT+"\n\n---\nCustomer: "+cv[0].content};
@@ -950,36 +950,49 @@ async function csend(q){
 }
 
 /* ---------- Priya's voice ---------- */
-let voiceOn=true,curAudio=null,ttsBroken=false;
-try{voiceOn=localStorage.getItem("dgVoice")!=="off"}catch(e){}
+let voiceOn=true,curAudio=null,ttsBroken=false,speechId=0,ttsCtl=null;
+try{voiceOn=localStorage.getItem("dgVoice")!=="off";ttsBroken=sessionStorage.getItem("dgTts")==="off"}catch(e){}
 function setVoiceUI(){$("#voiceBtn").classList.toggle("on",voiceOn);$("#voiceBtn .w").style.opacity=voiceOn?1:.15}
 setVoiceUI();
 $("#voiceBtn").onclick=()=>{voiceOn=!voiceOn;try{localStorage.setItem("dgVoice",voiceOn?"on":"off")}catch(e){};setVoiceUI();if(!voiceOn)stopSpeak()};
 function talking(on){$("#chHead").classList.toggle("talking",on);$("#priyaState").textContent=on?"● Speaking…":"● Replies instantly";duck(on)}
-function stopSpeak(){try{curAudio&&curAudio.pause()}catch(e){};curAudio=null;try{speechSynthesis.cancel()}catch(e){};talking(false)}
+function stopSpeak(){
+  speechId++;                                   // any reply still being prepared is now stale and will not play
+  try{ttsCtl&&ttsCtl.abort()}catch(e){};ttsCtl=null;
+  try{if(curAudio){curAudio.pause();curAudio.src=""}}catch(e){};curAudio=null;
+  try{speechSynthesis.cancel()}catch(e){};
+  talking(false);
+}
+function markTtsBroken(){ttsBroken=true;try{sessionStorage.setItem("dgTts","off")}catch(e){}}
 async function speak(text,force){
   if(!voiceOn&&!force)return;
-  stopSpeak();
+  stopSpeak();const id=speechId;
   const clean=text.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/gu,"").replace(/₹\s?(\d+)/g,"$1 rupees").trim();if(!clean)return;
   talking(true);
   if(!ttsBroken&&!sample&&/^https?:/.test(location.protocol)){
+    ttsCtl=new AbortController();const ctl=ttsCtl;
+    const timer=setTimeout(()=>ctl.abort(),3500);   // never keep the visitor waiting more than ~3.5s for the voice
     try{
-      const r=await fetch("/api/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:clean})});
-      if(r.ok){const url=URL.createObjectURL(await r.blob());const a=new Audio(url);curAudio=a;
-        a.onended=()=>{URL.revokeObjectURL(url);if(curAudio===a)talking(false)};await a.play();return}
-      if(r.status===503||r.status===404)ttsBroken=true;
-    }catch(e){}
+      const r=await fetch("/api/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:clean}),signal:ctl.signal});
+      clearTimeout(timer);
+      if(id!==speechId)return;
+      if(r.ok){const blob=await r.blob();if(id!==speechId)return;
+        const url=URL.createObjectURL(blob),a=new Audio(url);curAudio=a;
+        a.onended=a.onerror=()=>{URL.revokeObjectURL(url);if(id===speechId)talking(false)};
+        await a.play();return}
+      if(r.status===429||r.status===503||r.status===404||r.status===502)markTtsBroken();
+    }catch(e){clearTimeout(timer);if(id!==speechId)return;if(e&&e.name==="AbortError")markTtsBroken()}
   }
-  browserSpeak(clean);
+  if(id===speechId)browserSpeak(clean,id);
 }
-function browserSpeak(text){
+function browserSpeak(text,id){
   if(!("speechSynthesis" in window)){talking(false);return}
   try{
     const u=new SpeechSynthesisUtterance(text),dev=/[\u0900-\u097F]/.test(text),want=dev?(/[ळ]|आहे|तुम्ही/.test(text)?"mr-IN":"hi-IN"):"en-IN";
     const vs=speechSynthesis.getVoices(),FEM=/(swara|neerja|aarohi|lekha|veena|heera|kalpana|google हिन्दी|female|zira|samantha|karen)/i;
     const pick=f=>vs.filter(f).sort((a,b)=>FEM.test(b.name)-FEM.test(a.name))[0];
     u.voice=pick(v=>v.lang===want)||pick(v=>v.lang.startsWith("hi"))||pick(v=>v.lang==="en-IN")||pick(v=>FEM.test(v.name))||null;
-    u.lang=want;u.rate=.97;u.pitch=1.08;u.onend=u.onerror=()=>talking(false);speechSynthesis.speak(u);
+    u.lang=want;u.rate=1;u.pitch=1.08;u.onend=u.onerror=()=>{if(id===speechId)talking(false)};speechSynthesis.cancel();speechSynthesis.speak(u);
   }catch(e){talking(false)}
 }
 try{speechSynthesis.getVoices()}catch(e){}
