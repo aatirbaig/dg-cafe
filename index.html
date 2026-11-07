@@ -370,6 +370,22 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
 @keyframes eq{0%,100%{height:25%}50%{height:100%}}
 #musicBtn small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
 @media(max-width:560px){#musicBtn{left:14px;bottom:20px;padding:10px 13px}#musicBtn .mt{display:none}}
+.swipe{display:none}
+@media(max-width:700px){
+  section{padding:88px 0}
+  .testi{padding-top:96px}.bigmq{margin-top:80px}
+  .gal-in{padding:88px 0 40px;gap:28px}.gi{height:46vh}.gi.l{width:82vw}.gi.p{width:58vw}
+  .swipe{display:inline-flex;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--amber);margin-bottom:10px}
+  .fcta{padding:32px 24px;min-height:0}.insta{margin-top:60px}.fcols{margin-top:60px}
+  #fab{right:16px;bottom:16px;width:58px;height:58px;padding:0;justify-content:center;border-radius:50%}
+  #fab .fabtxt{display:none}#fab .avt{width:auto;height:auto;background:none;color:#120a00;font-size:24px}
+  #musicBtn{left:16px;bottom:20px;width:50px;height:50px;padding:0;justify-content:center}
+  .fbot{padding:28px 0 104px;flex-direction:column;align-items:center;text-align:center;gap:14px}
+  #chat{left:0;right:0;bottom:0;width:100%;height:88vh;height:88dvh;border-radius:24px 24px 0 0;border-bottom:none}
+  body.chat-open #fab,body.chat-open #musicBtn{opacity:0;pointer-events:none}
+  .cbar{padding-bottom:max(12px,env(safe-area-inset-bottom))}
+}
+#fab,#musicBtn{transition:opacity .3s,transform .3s,border-color .3s}
 .cbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
 .cbar input{padding:11px 14px;font-size:14px;border-radius:12px}
 .cbar button{background:var(--amber);border:none;color:#120a00;border-radius:12px;padding:0 16px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -470,7 +486,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
   <!-- GALLERY -->
   <section class="gal" id="inside">
     <div class="gal-in">
-      <div class="wrap gal-head"><div><div class="kicker">Step inside</div><h2>Made for <em>long</em> evenings.</h2></div><p>Neon lights overhead, warm pendants, a dessert counter that steals the show. Scroll to walk through.</p></div>
+      <div class="wrap gal-head"><div><div class="kicker">Step inside</div><h2>Made for <em>long</em> evenings.</h2></div><span class="swipe">Swipe to explore →</span><p>Neon lights overhead, warm pendants, a dessert counter that steals the show. Scroll to walk through.</p></div>
       <div class="gtrack" id="gtrack">
         <figure class="gi l"><img src="assets/interior-window.jpg" alt="DG Cafe lounge" loading="lazy"><span class="n">01</span><figcaption>The lounge</figcaption></figure>
         <figure class="gi p"><img src="assets/counter.jpg" alt="DG Cafe counter" loading="lazy"><span class="n">02</span><figcaption>The counter</figcaption></figure>
@@ -622,7 +638,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
 </footer>
 
 <button id="musicBtn" aria-label="Cafe music"><span class="eq"><i></i><i></i><i></i><i></i></span><span class="mt"><span id="musicTxt">Play cafe music</span><small>Bossa jazz piano · tap to toggle</small></span></button>
-<button id="fab" onclick="toggleChat()"><span class="avt">P</span>Ask Priya</button>
+<button id="fab" onclick="toggleChat()" aria-label="Ask Priya"><span class="avt">P</span><span class="fabtxt">Ask Priya</span></button>
 <div id="chat">
   <div class="ch" id="chHead"><span class="avwrap"><span class="logo" style="width:38px;height:38px;font-size:13px;border-width:2px">DG<small>CAFE</small></span></span><div><b>Priya · DG Cafe</b><small id="priyaState">● Replies instantly</small></div><button class="vbtn on" id="voiceBtn" title="Priya's voice on/off" aria-label="Toggle Priya's voice"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button><button onclick="toggleChat()">×</button></div>
   <div id="cmsgs"></div>
@@ -906,7 +922,7 @@ Rules: reply in the customer's language (Marathi, Hindi, English, Hinglish). 1�
 function cadd(t,who){const d=document.createElement("div");d.className="cm "+who;d.textContent=t;
   if(who==="bot"){const b=document.createElement("button");b.className="say";b.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Listen';b.onclick=()=>speak(t,true);d.appendChild(document.createElement("br"));d.appendChild(b)}
   $("#cmsgs").appendChild(d);$("#cmsgs").scrollTop=1e9}
-function toggleChat(){const c=$("#chat");c.classList.toggle("open");if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
+function toggleChat(){const c=$("#chat");c.classList.toggle("open");document.body.classList.toggle("chat-open",c.classList.contains("open"));if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
 function openChat(){if(!$("#chat").classList.contains("open"))toggleChat()}
 function greet(){if(greeted)return;greeted=true;const g="नमस्कार! 👋 I'm Priya from DG Cafe. Ask me about the menu, timings or bookings, in Marathi, Hindi or English.";cadd(g,"bot");speak(g);
   $("#cchips").innerHTML=["Pizza prices?","आज किती वाजेपर्यंत उघडं?","Best dessert?","Parking hai?"].map(q=>`<button>${q}</button>`).join("");
