@@ -78,7 +78,10 @@ module.exports = async (req, res) => {
   const key = process.env.GEMINI_API_KEY, cloudKey = process.env.GOOGLE_TTS_KEY;
   const ping = req.method === "GET" && req.query && req.query.ping === "1";
   if (req.method !== "POST" && !ping) return res.status(405).json({ error: "method_not_allowed" });
-  if (!key && !cloudKey) return res.status(503).json({ error: "not_configured" });
+  // Gemini TTS takes ~4s per reply and allows only ~10 per day, so it is opt-in (USE_GEMINI_TTS=1).
+  // Without a Google Cloud key the site uses the visitor's instant built-in voice instead.
+  const useGemini = key && process.env.USE_GEMINI_TTS === "1";
+  if (!cloudKey && !useGemini) return res.status(503).json({ error: "not_configured" });
   const ip = (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || "anon";
   if (limited(ip)) return res.status(429).json({ error: "rate_limited" });
 
@@ -94,7 +97,7 @@ module.exports = async (req, res) => {
     if (!hit) {
       let err;
       if (cloudKey) { try { hit = await cloudTts(cloudKey, text); } catch (e) { err = e; console.error(e.message, JSON.stringify(e.detail || {})); } }
-      if (!hit && key) hit = await synth(key, text);
+      if (!hit && useGemini) hit = await synth(key, text);
       if (!hit) throw err || new Error("tts_failed");
       if (cache.size > 200) cache.clear(); cache.set(text, hit);
     }
