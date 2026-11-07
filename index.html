@@ -351,6 +351,25 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
 .cm.me{background:var(--amber);color:#120a00;align-self:flex-end;border-bottom-right-radius:4px}
 .cchips{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px}
 .cchips button{background:none;border:1px solid var(--line);color:var(--cream);border-radius:99px;padding:6px 11px;font-size:12px;cursor:pointer;font-family:inherit}
+.ch .avwrap{position:relative;display:inline-flex;flex-shrink:0}
+.ch.talking .avwrap::after{content:"";position:absolute;inset:-4px;border-radius:50%;border:2px solid var(--amber);animation:talkring 1s ease-out infinite}
+@keyframes talkring{from{opacity:1;transform:scale(.95)}to{opacity:0;transform:scale(1.35)}}
+.vbtn{margin-left:auto;background:none;border:1px solid var(--line);color:var(--cream);width:34px;height:34px;border-radius:50%;cursor:pointer;display:grid;place-items:center;transition:all .3s}
+.vbtn.on{background:rgba(247,148,29,.15);border-color:rgba(247,148,29,.5);color:var(--amber)}
+.vbtn svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.ch .vbtn+button{margin-left:6px}
+.cm .say{display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11.5px;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;font-family:inherit}
+.cm .say:hover{color:var(--amber)}
+.cm .say svg{width:12px;height:12px;fill:currentColor}
+#musicBtn{position:fixed;left:24px;bottom:24px;z-index:60;display:flex;align-items:center;gap:11px;padding:11px 18px 11px 14px;border-radius:99px;border:1px solid var(--line);background:rgba(16,16,20,.78);backdrop-filter:blur(14px);color:var(--cream);font-family:inherit;font-size:13px;cursor:pointer;box-shadow:0 14px 40px rgba(0,0,0,.4);transition:border-color .3s,transform .3s}
+#musicBtn:hover{border-color:var(--amber);transform:translateY(-2px)}
+#musicBtn .eq{display:flex;align-items:flex-end;gap:2.5px;height:16px;width:18px}
+#musicBtn .eq i{flex:1;background:var(--amber);border-radius:2px;height:30%;transition:height .3s}
+#musicBtn.on .eq i{animation:eq 1s ease-in-out infinite}
+#musicBtn.on .eq i:nth-child(2){animation-delay:-.4s}#musicBtn.on .eq i:nth-child(3){animation-delay:-.7s}#musicBtn.on .eq i:nth-child(4){animation-delay:-.2s}
+@keyframes eq{0%,100%{height:25%}50%{height:100%}}
+#musicBtn small{display:block;font-size:10.5px;color:var(--muted);margin-top:1px}
+@media(max-width:560px){#musicBtn{left:14px;bottom:20px;padding:10px 13px}#musicBtn .mt{display:none}}
 .cbar{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
 .cbar input{padding:11px 14px;font-size:14px;border-radius:12px}
 .cbar button{background:var(--amber);border:none;color:#120a00;border-radius:12px;padding:0 16px;font-weight:600;cursor:pointer;font-family:inherit}
@@ -602,9 +621,10 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
   </div>
 </footer>
 
+<button id="musicBtn" aria-label="Cafe music"><span class="eq"><i></i><i></i><i></i><i></i></span><span class="mt"><span id="musicTxt">Play cafe music</span><small>Soft lo-fi · tap to toggle</small></span></button>
 <button id="fab" onclick="toggleChat()"><span class="avt">P</span>Ask Priya</button>
 <div id="chat">
-  <div class="ch"><span class="logo" style="width:38px;height:38px;font-size:13px;border-width:2px">DG<small>CAFE</small></span><div><b>Priya · DG Cafe</b><small>● Replies instantly</small></div><button onclick="toggleChat()">×</button></div>
+  <div class="ch" id="chHead"><span class="avwrap"><span class="logo" style="width:38px;height:38px;font-size:13px;border-width:2px">DG<small>CAFE</small></span></span><div><b>Priya · DG Cafe</b><small id="priyaState">● Replies instantly</small></div><button class="vbtn on" id="voiceBtn" title="Priya's voice on/off" aria-label="Toggle Priya's voice"><svg viewBox="0 0 24 24"><path d="M11 5L6 9H3v6h3l5 4z"/><path class="w" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg></button><button onclick="toggleChat()">×</button></div>
   <div id="cmsgs"></div>
   <div class="cchips" id="cchips"></div>
   <div class="cbar"><input id="cin" placeholder="Ask about menu, timings, booking…"><button onclick="csend()">Send</button></div>
@@ -614,6 +634,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
 <script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const hasG=typeof gsap!=="undefined"&&typeof ScrollTrigger!=="undefined", has3=typeof THREE!=="undefined";
@@ -882,10 +903,12 @@ FACTS (only these): Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chip
 Menu with prices: ${Object.values(MENU).flat().filter(x=>x[1]).map(x=>x[0]+" ₹"+x[1]).join(", ")}.
 Also on menu (price: ask staff): ${Object.values(MENU).flat().filter(x=>!x[1]).map(x=>x[0]).join(", ")}. Also North Indian, Chinese, biryani, kebabs.
 Rules: reply in the customer's language (Marathi, Hindi, English, Hinglish). 1–3 short sentences, at most one emoji. Never invent prices or offers. For table bookings, point them to the "Reserve a table" form on this page or WhatsApp 096650 60568.`;
-function cadd(t,who){const d=document.createElement("div");d.className="cm "+who;d.textContent=t;$("#cmsgs").appendChild(d);$("#cmsgs").scrollTop=1e9}
+function cadd(t,who){const d=document.createElement("div");d.className="cm "+who;d.textContent=t;
+  if(who==="bot"){const b=document.createElement("button");b.className="say";b.innerHTML='<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>Listen';b.onclick=()=>speak(t,true);d.appendChild(document.createElement("br"));d.appendChild(b)}
+  $("#cmsgs").appendChild(d);$("#cmsgs").scrollTop=1e9}
 function toggleChat(){const c=$("#chat");c.classList.toggle("open");if(c.classList.contains("open")){greet();setTimeout(()=>$("#cin").focus(),300)}}
 function openChat(){if(!$("#chat").classList.contains("open"))toggleChat()}
-function greet(){if(greeted)return;greeted=true;cadd("नमस्कार! 👋 I'm Priya from DG Cafe. Ask me about the menu, timings or bookings, in Marathi, Hindi or English.","bot");
+function greet(){if(greeted)return;greeted=true;const g="नमस्कार! 👋 I'm Priya from DG Cafe. Ask me about the menu, timings or bookings, in Marathi, Hindi or English.";cadd(g,"bot");speak(g);
   $("#cchips").innerHTML=["Pizza prices?","आज किती वाजेपर्यंत उघडं?","Best dessert?","Parking hai?"].map(q=>`<button>${q}</button>`).join("");
   $$("#cchips button").forEach(b=>b.onclick=()=>csend(b.textContent))}
 function fb(q){const t=q.toLowerCase(),h=(...k)=>k.some(x=>t.includes(x));
@@ -907,8 +930,100 @@ async function csend(q){
       if(res.ok){const j=await res.json();r=(j.reply||"").trim()}}catch(e){}
   }
   if(!r)r=fb(q);
-  ty.remove();cadd(r,"bot");chist.push({role:"assistant",content:r});cbusy=false;
+  ty.remove();cadd(r,"bot");chist.push({role:"assistant",content:r});cbusy=false;speak(r);
 }
+
+/* ---------- Priya's voice ---------- */
+let voiceOn=true,curAudio=null,ttsBroken=false;
+try{voiceOn=localStorage.getItem("dgVoice")!=="off"}catch(e){}
+function setVoiceUI(){$("#voiceBtn").classList.toggle("on",voiceOn);$("#voiceBtn .w").style.opacity=voiceOn?1:.15}
+setVoiceUI();
+$("#voiceBtn").onclick=()=>{voiceOn=!voiceOn;try{localStorage.setItem("dgVoice",voiceOn?"on":"off")}catch(e){};setVoiceUI();if(!voiceOn)stopSpeak()};
+function talking(on){$("#chHead").classList.toggle("talking",on);$("#priyaState").textContent=on?"● Speaking…":"● Replies instantly";duck(on)}
+function stopSpeak(){try{curAudio&&curAudio.pause()}catch(e){};curAudio=null;try{speechSynthesis.cancel()}catch(e){};talking(false)}
+async function speak(text,force){
+  if(!voiceOn&&!force)return;
+  stopSpeak();
+  const clean=text.replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]/gu,"").replace(/₹\s?(\d+)/g,"$1 rupees").trim();if(!clean)return;
+  talking(true);
+  if(!ttsBroken&&!sample&&/^https?:/.test(location.protocol)){
+    try{
+      const r=await fetch("/api/tts",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({text:clean})});
+      if(r.ok){const url=URL.createObjectURL(await r.blob());const a=new Audio(url);curAudio=a;
+        a.onended=()=>{URL.revokeObjectURL(url);if(curAudio===a)talking(false)};await a.play();return}
+      if(r.status===503||r.status===404)ttsBroken=true;
+    }catch(e){}
+  }
+  browserSpeak(clean);
+}
+function browserSpeak(text){
+  if(!("speechSynthesis" in window)){talking(false);return}
+  try{
+    const u=new SpeechSynthesisUtterance(text),dev=/[\u0900-\u097F]/.test(text),want=dev?(/[ळ]|आहे|तुम्ही/.test(text)?"mr-IN":"hi-IN"):"en-IN";
+    const vs=speechSynthesis.getVoices(),FEM=/(swara|neerja|aarohi|lekha|veena|heera|kalpana|google हिन्दी|female|zira|samantha|karen)/i;
+    const pick=f=>vs.filter(f).sort((a,b)=>FEM.test(b.name)-FEM.test(a.name))[0];
+    u.voice=pick(v=>v.lang===want)||pick(v=>v.lang.startsWith("hi"))||pick(v=>v.lang==="en-IN")||pick(v=>FEM.test(v.name))||null;
+    u.lang=want;u.rate=.97;u.pitch=1.08;u.onend=u.onerror=()=>talking(false);speechSynthesis.speak(u);
+  }catch(e){talking(false)}
+}
+try{speechSynthesis.getVoices()}catch(e){}
+
+/* ---------- Cafe music: generative lo-fi (no audio files, no copyright) ---------- */
+const Music={on:false,ready:false,ducked:false,master:null};
+const LOUD=-9,DUCKED=-22,SILENT=-60;
+let musicInitP=null;
+function musicInit(){if(typeof Tone==="undefined")return Promise.resolve(false);return musicInitP||(musicInitP=buildMusic())}
+async function buildMusic(){
+  await Tone.start();const T=Tone;
+  T.Transport.bpm.value=72;T.Transport.swing=.2;T.Transport.swingSubdivision="8n";
+  const master=new T.Volume(SILENT).toDestination();Music.master=master;
+  const comp=new T.Compressor(-22,3).connect(master);
+  const rev=new T.Reverb({decay:3.4,wet:.33});await rev.generate();rev.connect(comp);
+  const warm=new T.Filter(1700,"lowpass").connect(rev);
+  const chorus=new T.Chorus(1.6,2.4,.35).start().connect(warm);
+  const trem=new T.Tremolo(3.2,.32).start().connect(chorus);
+  const ep=new T.PolySynth(T.FMSynth,{harmonicity:3,modulationIndex:1.5,oscillator:{type:"sine"},modulation:{type:"sine"},
+    envelope:{attack:.008,decay:1.6,sustain:.22,release:1.8},modulationEnvelope:{attack:.01,decay:.5,sustain:.08,release:.6}}).connect(trem);ep.volume.value=-11;
+  const bass=new T.MonoSynth({oscillator:{type:"sine"},envelope:{attack:.02,decay:.5,sustain:.5,release:.7},filterEnvelope:{baseFrequency:110,octaves:1.4}}).connect(comp);bass.volume.value=-10;
+  const kick=new T.MembraneSynth({pitchDecay:.035,octaves:4,envelope:{attack:.001,decay:.3,sustain:0}}).connect(comp);kick.volume.value=-15;
+  const hat=new T.NoiseSynth({noise:{type:"white"},envelope:{attack:.001,decay:.035,sustain:0}}).connect(new T.Filter(7500,"highpass").connect(rev));hat.volume.value=-31;
+  const rim=new T.NoiseSynth({noise:{type:"pink"},envelope:{attack:.002,decay:.12,sustain:0}}).connect(new T.Filter(1900,"bandpass").connect(rev));rim.volume.value=-23;
+  const bell=new T.FMSynth({harmonicity:4,modulationIndex:2.5,envelope:{attack:.005,decay:1.4,sustain:0,release:1.2}}).connect(rev);bell.volume.value=-25;
+  const vinyl=new T.Noise("pink");vinyl.connect(new T.Filter(3000,"highpass").connect(comp));vinyl.volume.value=-47;vinyl.start();
+  const crackle=new T.NoiseSynth({noise:{type:"white"},envelope:{attack:.0005,decay:.006,sustain:0}}).connect(comp);crackle.volume.value=-34;
+  const chords=[["F3","A3","C4","E4","G4"],["E3","G3","B3","D4","F#4"],["D3","F3","A3","C4","E4"],["C3","E3","G3","B3","D4"]];
+  const roots=["F2","E2","D2","C2"],fifths=["C3","B2","A2","G2"],mel=["E5","G5","A5","C6","D5","B4"];
+  let bar=0;
+  new T.Loop(time=>{const i=bar%4,c=chords[i];
+    c.forEach((n,k)=>ep.triggerAttackRelease(n,"1m",time+k*.02+Math.random()*.01,.45+Math.random()*.12));
+    if(bar%2)c.slice(2).forEach((n,k)=>ep.triggerAttackRelease(n,"4n",time+T.Time("2n").toSeconds()+T.Time("8n").toSeconds()+k*.015,.28));
+    bass.triggerAttackRelease(roots[i],"4n.",time,.85);
+    bass.triggerAttackRelease(fifths[i],"8n",time+T.Time("2n").toSeconds()+T.Time("8n").toSeconds(),.55);
+    bar++;},"1m").start(0);
+  new T.Sequence((time,step)=>{
+    if(step===0||step===5)kick.triggerAttackRelease("C1","8n",time,.75);
+    if(step===2||step===6)rim.triggerAttackRelease("16n",time,.45);
+    hat.triggerAttackRelease("32n",time,step%2?.22:.4);
+    if(Math.random()<.16)bell.triggerAttackRelease(mel[Math.floor(Math.random()*mel.length)],"8n",time,.35);
+    if(Math.random()<.5)crackle.triggerAttackRelease("64n",time+Math.random()*.2,Math.random()*.6);
+  },[0,1,2,3,4,5,6,7],"8n").start(0);
+  Music.ready=true;return true;
+}
+function musicUI(){$("#musicBtn").classList.toggle("on",Music.on);$("#musicTxt").textContent=Music.on?"Cafe music on":"Play cafe music"}
+async function musicOn(){
+  try{if(!(await musicInit()))return}catch(e){return}
+  if(Tone.context.state!=="running")await Tone.start();
+  Tone.Transport.start();Music.on=true;Music.master.volume.cancelScheduledValues(Tone.now());
+  Music.master.volume.rampTo(Music.ducked?DUCKED:LOUD,2.5);musicUI();
+}
+function musicOff(){Music.on=false;musicUI();if(!Music.ready)return;Music.master.volume.rampTo(SILENT,.8);setTimeout(()=>{if(!Music.on)Tone.Transport.pause()},900)}
+function duck(d){Music.ducked=d;if(Music.on&&Music.master)Music.master.volume.rampTo(d?DUCKED:LOUD,.5)}
+let musicPref="on";try{musicPref=localStorage.getItem("dgMusic")||"on"}catch(e){}
+$("#musicBtn").onclick=e=>{e.stopPropagation();const next=!Music.on;try{localStorage.setItem("dgMusic",next?"on":"off")}catch(_){};next?musicOn():musicOff()};
+// browsers only allow sound after the visitor interacts, so the music starts softly on the first tap or click
+function firstGesture(e){if(e&&e.target&&e.target.closest&&e.target.closest("#musicBtn"))return;removeEventListener("pointerdown",firstGesture,true);removeEventListener("keydown",firstGesture,true);if(musicPref!=="off"&&!Music.on)musicOn()}
+addEventListener("pointerdown",firstGesture,true);addEventListener("keydown",firstGesture,true);
+document.addEventListener("visibilitychange",()=>{if(!Music.ready||!Music.on)return;document.hidden?Music.master.volume.rampTo(SILENT,.4):Music.master.volume.rampTo(Music.ducked?DUCKED:LOUD,1)});
 $("#cin").addEventListener("keydown",e=>{if(e.key==="Enter")csend()});
 </script>
 </body>
