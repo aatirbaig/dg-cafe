@@ -902,6 +902,10 @@ async function csend(q){
   let r="";
   if(sample){try{const cv=chist.slice(-12).map(x=>({...x}));while(cv[0].role!=="user")cv.shift();cv[0]={role:"user",content:PROMPT+"\n\n---\nCustomer: "+cv[0].content};
     r=((await sample(cv,{modelTier:"quick",cache:false})).text||"").trim()}catch(e){if(e&&e.code==="not_granted")sample=null}}
+  if(!r&&!sample&&/^https?:/.test(location.protocol)){
+    try{const res=await fetch("/api/chat",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({messages:chist.slice(-12)})});
+      if(res.ok){const j=await res.json();r=(j.reply||"").trim()}}catch(e){}
+  }
   if(!r)r=fb(q);
   ty.remove();cadd(r,"bot");chist.push({role:"assistant",content:r});cbusy=false;
 }
