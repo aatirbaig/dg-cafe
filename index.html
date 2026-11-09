@@ -51,7 +51,7 @@ nav .wrap{display:flex;align-items:center;justify-content:space-between;height:8
 .status.on i{background:var(--green);animation:pulse 2s infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(127,196,154,.7)}70%{box-shadow:0 0 0 9px rgba(127,196,154,0)}100%{box-shadow:0 0 0 0 rgba(127,196,154,0)}}
 .status b{color:var(--cream);font-weight:600}.status em{font-style:normal}
-.hh1{font-family:Fraunces,serif;font-weight:600;font-size:clamp(40px,4.5vw,68px);line-height:1.02;letter-spacing:-.035em;margin:26px 0 22px}
+.hh1{font-family:Fraunces,serif;font-weight:600;font-size:clamp(40px,4.5vw,68px);line-height:1.02;letter-spacing:-.035em;margin:22px 0 22px}
 .hh1 .ln{display:block;overflow:hidden;padding-bottom:.06em}
 .hh1 .ln>span{display:inline-block}
 .hh1 em{font-style:italic;font-weight:400;color:var(--amber)}
@@ -235,6 +235,90 @@ h2 em{font-style:italic;font-weight:400;color:var(--amber)}
 .mnote a{color:var(--amber);border-bottom:1px solid}
 @media(max-width:800px){.mlist{grid-template-columns:1fr}}
 
+/* ---------- DG HOME STAY ---------- */
+.newpill{display:flex;width:max-content;max-width:100%;align-items:center;gap:10px;margin:12px 0 0;font-size:13px;padding:7px 14px 7px 7px;border-radius:99px;border:1px solid rgba(247,148,29,.35);background:rgba(247,148,29,.08);color:var(--cream);transition:background .3s,translate .3s}
+.newpill b{font-size:10.5px;letter-spacing:1.5px;text-transform:uppercase;background:var(--amber);color:#120a00;padding:4px 8px;border-radius:99px}
+.newpill:hover{background:rgba(247,148,29,.16);translate:3px 0}
+.stay{position:relative;padding:0}
+.stay-pin{position:relative;height:100vh;min-height:620px;overflow:hidden;isolation:isolate}
+.stay-sky{position:absolute;inset:0;z-index:-2;background:radial-gradient(ellipse at 70% 40%,#ffd9a8 0%,#f3b97d 22%,#b5683a 48%,#1a0f0a 85%)}
+.stay-sky.n{background:radial-gradient(ellipse at 70% 38%,#2a3a7a 0%,#18224a 30%,#0b0d1c 62%,#060607 90%);opacity:var(--night,0)}
+.stay-stars{position:absolute;inset:0;z-index:-1;opacity:var(--night,0);background-image:radial-gradient(1.4px 1.4px at 12% 18%,#fff,transparent),radial-gradient(1px 1px at 32% 8%,#fff,transparent),radial-gradient(1.2px 1.2px at 55% 22%,#fff,transparent),radial-gradient(1px 1px at 78% 12%,#fff,transparent),radial-gradient(1.6px 1.6px at 90% 30%,#fff,transparent),radial-gradient(1px 1px at 66% 6%,#fff,transparent),radial-gradient(1px 1px at 44% 14%,#fff,transparent),radial-gradient(1.3px 1.3px at 22% 30%,#fff,transparent)}
+.stay-pin::after{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:linear-gradient(90deg,rgba(8,8,10,.92) 0%,rgba(8,8,10,.7) 30%,rgba(8,8,10,0) 55%),linear-gradient(0deg,var(--bg) 0%,transparent 18%),linear-gradient(180deg,var(--bg) 0%,transparent 14%)}
+#stayGl{position:absolute;top:0;right:0;width:62%;height:100%;z-index:1;display:block}
+.stay-copy{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:1280px;margin:0 auto;padding:0 28px}
+.stay-copy>*{max-width:440px}
+.stay-h{font-size:clamp(46px,6.2vw,96px);line-height:.95}
+.steps{position:relative;height:178px;margin:30px 0 24px}
+.step{position:absolute;inset:0;opacity:0;transform:translateY(26px);transition:opacity .6s,transform .8s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+.step.on{opacity:1;transform:none}
+.step span{font-family:Fraunces,serif;font-size:14px;color:var(--amber)}
+.step h3{font-family:Fraunces,serif;font-size:clamp(24px,2.4vw,32px);font-weight:600;letter-spacing:-.02em;margin:8px 0 10px;line-height:1.15}
+.step p{color:#c9c2b8;font-size:16px;line-height:1.6}
+.stay-prog{display:flex;gap:8px;margin-bottom:32px}
+.stay-prog i{width:46px;height:3px;border-radius:3px;background:rgba(244,241,236,.15);position:relative;overflow:hidden}
+.stay-prog i b{position:absolute;inset:0;background:var(--amber);transform-origin:left;transform:scaleX(var(--f,0))}
+.clock{position:absolute;z-index:3;right:4%;top:110px;display:flex;align-items:center;gap:12px;padding:10px 16px 10px 10px;border-radius:99px;background:rgba(8,8,10,.45);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.14)}
+.clock .orb{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#fff3c4,#ffb347 55%,#f7941d);box-shadow:0 0 24px rgba(255,179,71,.7);transition:all .4s}
+.clock.night .orb{background:radial-gradient(circle at 60% 40%,#f4f1ec 0 45%,transparent 46%),radial-gradient(circle at 35% 35%,#e9ecf5,#aab4d4);box-shadow:0 0 22px rgba(170,180,212,.6)}
+.clock b{display:block;font-family:Fraunces,serif;font-size:20px;font-variant-numeric:tabular-nums}
+.clock small{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:#d8d2c9}
+.stay-hint{position:absolute;z-index:3;left:50%;bottom:26px;transform:translateX(-50%);font-size:10.5px;letter-spacing:3px;text-transform:uppercase;color:#cfc8be}
+/* magnetic CTA with shine */
+.btn.mag{position:relative;overflow:hidden;will-change:transform;box-shadow:0 14px 40px rgba(247,148,29,.35)}
+.btn.mag::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-18deg);animation:shine 3.4s ease-in-out infinite}
+@keyframes shine{0%,55%{left:-60%}100%{left:130%}}
+.btn .ar{display:inline-block;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+.btn:hover .ar{transform:translateX(5px)}
+/* booking */
+.stay-book{padding:110px 0 140px;overflow:hidden}
+.sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.sb-left h2{font-size:clamp(40px,5vw,72px)}
+.sb-left p.lead{color:#bdb6ac;font-size:17.5px;line-height:1.65;margin:22px 0 30px;max-width:460px}
+.perks{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px}
+.perk{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:14.5px;transition:border-color .3s,transform .3s}
+.perk:hover{border-color:rgba(247,148,29,.45);transform:translateY(-3px)}
+.perk i{width:34px;height:34px;border-radius:10px;background:rgba(247,148,29,.12);display:grid;place-items:center;font-style:normal;font-size:16px;flex-shrink:0}
+.near{margin-top:40px;max-width:480px}
+.near small{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.near div{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.near span{font-size:13px;padding:7px 12px;border-radius:99px;border:1px solid var(--line);color:#d8d2c9}
+.sb-card{position:relative;border-radius:30px;padding:38px;background:linear-gradient(160deg,rgba(30,30,36,.92),rgba(14,14,18,.92));box-shadow:0 50px 120px rgba(0,0,0,.55);isolation:isolate}
+.sb-card::before{content:"";position:absolute;inset:0;border-radius:30px;padding:1px;background:linear-gradient(140deg,rgba(247,148,29,.7),rgba(255,255,255,.08) 40%,rgba(255,255,255,.04) 60%,rgba(247,148,29,.4));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.sb-card::after{content:"";position:absolute;width:320px;height:320px;right:-120px;top:-140px;border-radius:50%;background:radial-gradient(rgba(247,148,29,.22),transparent 70%);z-index:-1;pointer-events:none}
+.sb-card h3{font-family:Fraunces,serif;font-size:28px;font-weight:600}
+.sb-card .sub{color:var(--muted);font-size:14px;margin:6px 0 24px}
+.sbf{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.sbf .full{grid-column:1/-1}
+.rtype{display:flex;gap:8px}
+.rtype button{flex:1;padding:12px 8px;border-radius:14px;border:1px solid var(--line);background:rgba(8,8,10,.6);color:var(--cream);font-family:inherit;font-size:13.5px;cursor:pointer;transition:all .25s}
+.rtype button.on{border-color:var(--amber);background:rgba(247,148,29,.14);color:var(--amber2)}
+.stepper{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:14px;background:rgba(8,8,10,.7);padding:6px}
+.stepper button{width:38px;height:38px;border-radius:10px;border:none;background:rgba(255,255,255,.06);color:var(--cream);font-size:18px;cursor:pointer}
+.stepper button:hover{background:rgba(247,148,29,.2)}
+.stepper b{font-size:16px}
+.summary{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:14px;background:rgba(247,148,29,.08);border:1px dashed rgba(247,148,29,.35);font-size:14px}
+.summary b{font-family:Fraunces,serif;font-size:18px;color:var(--amber2)}
+.sb-cta{grid-column:1/-1;display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.btn.wa2{background:#25d366;color:#04210f;justify-content:center;padding:17px 24px;font-size:15.5px;box-shadow:0 14px 40px rgba(37,211,102,.28)}
+.btn.wa2:hover{background:#3ee07b;transform:translateY(-2px)}
+.btn.wa2 svg{width:20px;height:20px;fill:currentColor}
+.sb-alt{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.sb-alt a{color:var(--cream);border-bottom:1px solid var(--line)}
+.sb-alt a:hover{color:var(--amber);border-color:var(--amber)}
+.sb-err{grid-column:1/-1;color:#ff9b8a;font-size:13px;display:none}
+@media(max-width:900px){
+  .stay-pin{min-height:680px}
+  #stayGl{width:100%;height:58%;top:0}
+  .stay-pin::after{background:linear-gradient(0deg,rgba(8,8,10,.96) 0%,rgba(8,8,10,.92) 40%,rgba(8,8,10,0) 58%),linear-gradient(180deg,var(--bg) 0%,transparent 12%)}
+  .stay-copy{justify-content:flex-end;padding-bottom:40px}
+  .stay-h{font-size:46px}.steps{height:150px;margin:16px 0 14px}.step h3{font-size:22px}.step p{font-size:14.5px}
+  .clock{top:84px;right:16px;padding:7px 12px 7px 7px}.clock .orb{width:26px;height:26px}.clock b{font-size:16px}
+  .stay-hint{display:none}
+  .sb-grid{grid-template-columns:1fr;gap:44px}.stay-book{padding:80px 0 100px}.sb-card{padding:26px 20px}
+}
+@media(max-width:420px){.perks{grid-template-columns:1fr}.sbf{grid-template-columns:1fr}.rtype button{font-size:12.5px;padding:11px 4px}}
+
 /* ---------- TESTIMONIALS ---------- */
 .testi{position:relative;padding:160px 0 0;overflow:hidden}
 .testi .bgp{position:absolute;inset:0;z-index:-1;opacity:.22;filter:saturate(1.2)}
@@ -398,7 +482,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
 
 <nav id="nav"><div class="wrap">
   <a href="#top" class="brand"><span class="logo">DG<small>CAFE</small></span>DG Cafe</a>
-  <div class="links"><a href="#about">About</a><a href="#inside">Inside</a><a href="#menu">Menu</a><a href="#reviews">Reviews</a><a href="#visit">Visit</a></div>
+  <div class="links"><a href="#about">About</a><a href="#inside">Inside</a><a href="#menu">Menu</a><a href="#stay">Stay</a><a href="#reviews">Reviews</a><a href="#visit">Visit</a></div>
   <a href="#visit" class="btn primary">Book a table</a>
 </div></nav>
 
@@ -408,7 +492,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
     <div class="wrap" style="flex:1;display:flex;flex-direction:column">
       <div class="hgrid">
         <div>
-          <div class="status hi-in" id="status"><i></i><span>Dhaval Plaza, Chiplun</span></div>
+          <div class="status hi-in" id="status"><i></i><span>Dhaval Plaza, Chiplun</span></div><a class="newpill hi-in" href="#stay"><b>New</b>DG Home Stay · Book a room →</a>
           <h1 class="hh1"><span class="ln"><span>Coffee, pizza</span></span><span class="ln"><span>&amp; desserts in the</span></span><span class="ln"><span>heart of <em>Chiplun.</em></span></span></h1>
           <p class="hlead hi-in">DG Cafe is a <b>family-friendly cafe at Dhaval Plaza</b>. Dine in with friends, grab a takeaway or order home. Open every day, 11 AM to 11 PM.</p>
           <div class="hcta hi-in"><a href="#visit" class="btn primary lg">Book a table</a><a href="#menu" class="btn ghost lg">View menu →</a></div>
@@ -529,6 +613,56 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
     </div>
   </section>
 
+  <!-- DG HOME STAY -->
+  <section class="stay" id="stay">
+    <div class="stay-pin" id="stayPin">
+      <div class="stay-sky"></div><div class="stay-sky n"></div><div class="stay-stars"></div>
+      <canvas id="stayGl"></canvas>
+      <div class="clock" id="stayClock"><span class="orb"></span><div><b id="clockT">8:00 AM</b><small id="clockL">Morning</small></div></div>
+      <div class="stay-copy">
+        <div class="kicker">New · DG Home Stay</div>
+        <h2 class="stay-h">Stay the <em>night.</em></h2>
+        <div class="steps">
+          <div class="step on"><span>01 — Rest</span><h3>A cozy room, ready when you are</h3><p>Comfortable home stay rooms in Chiplun for families, couples and travellers on the Mumbai–Goa route.</p></div>
+          <div class="step"><span>02 — Taste</span><h3>Your favourite café, part of the stay</h3><p>Start the day with coffee and end it with dessert at DG Cafe, Dhaval Plaza.</p></div>
+          <div class="step"><span>03 — Explore</span><h3>The Konkan, on your doorstep</h3><p>The Vashishti river, Parshuram temple and Sawatsada waterfall are all a short drive from Chiplun.</p></div>
+        </div>
+        <div class="stay-prog" id="stayProg"><i><b></b></i><i><b></b></i><i><b></b></i></div>
+        <div><a href="#book-stay" class="btn primary lg mag">Check room availability <span class="ar">→</span></a></div>
+      </div>
+      <div class="stay-hint">Scroll · day to night</div>
+    </div>
+  </section>
+
+  <section class="stay-book" id="book-stay">
+    <div class="wrap sb-grid">
+      <div class="sb-left">
+        <div class="kicker rv">DG Home Stay</div>
+        <h2 class="rv">Book a room in <em>one message.</em></h2>
+        <p class="lead rv">Pick your dates and our team will confirm availability and the best rate for you on WhatsApp. Nothing to pay to ask.</p>
+        <div class="perks" id="perks"></div>
+        <div class="near rv"><small>Nearby to explore</small><div><span>Vashishti river</span><span>Parshuram temple</span><span>Sawatsada waterfall</span><span>Konkan coast</span></div></div>
+      </div>
+      <div class="sb-card rv">
+        <h3>Check availability</h3>
+        <p class="sub">Free to enquire · reply on WhatsApp</p>
+        <form class="sbf" id="stayForm" novalidate>
+          <div><label>Check-in</label><input type="date" name="in" required></div>
+          <div><label>Check-out</label><input type="date" name="out" required></div>
+          <div class="full"><label>Room for</label><div class="rtype" id="rtype"><button type="button" class="on" data-v="Couple">Couple</button><button type="button" data-v="Family">Family</button><button type="button" data-v="Group">Group</button></div></div>
+          <div><label>Guests</label><div class="stepper"><button type="button" id="gMinus" aria-label="Fewer guests">−</button><b id="gCount">2</b><button type="button" id="gPlus" aria-label="More guests">+</button></div></div>
+          <div><label>Your name</label><input name="name" placeholder="Name" autocomplete="name"></div>
+          <div class="summary"><span id="sumTxt">Select your dates</span><b id="sumN">—</b></div>
+          <div class="sb-err" id="sbErr">Please choose a check-out date after check-in.</div>
+          <div class="sb-cta">
+            <button class="btn wa2 mag" type="submit"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.2-.7-2.7-1.1-4.4-3.9-4.5-4-.1-.2-1.1-1.4-1.1-2.7s.7-1.9.9-2.2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>Check availability on WhatsApp <span class="ar">→</span></button>
+            <div class="sb-alt"><span>Prefer to talk? <a href="tel:+919665060568">Call 096650 60568</a></span><span>No payment needed to enquire</span></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <!-- TESTIMONIALS -->
   <section class="testi" id="reviews">
     <div class="bgp"><img src="assets/interior-table.jpg" alt=""></div>
@@ -626,7 +760,7 @@ footer{padding-top:40px;overflow:hidden;background:linear-gradient(rgba(8,8,10,0
       </div>
       <div><h4>Visit</h4><p>Dhaval Plaza, near Nagar Parishad, Swara Vihar, Chiplun 415605</p><a href="https://www.google.com/maps/search/?api=1&query=DG+Cafe+Dhaval+Plaza+Chiplun" rel="noopener" style="color:var(--amber)">Get directions ↗</a></div>
       <div><h4>Hours</h4><p>Monday to Sunday<br>11:00 AM – 11:00 PM</p><p style="font-size:12.5px">Festival hours may vary</p></div>
-      <div><h4>Explore</h4><a href="#menu">Menu</a><a href="#inside">Inside DG</a><a href="#reviews">Reviews</a><a href="#visit">Book a table</a><a href="tel:+919665060568">096650 60568</a></div>
+      <div><h4>Explore</h4><a href="#menu">Menu</a><a href="#inside">Inside DG</a><a href="#stay">DG Home Stay</a><a href="#reviews">Reviews</a><a href="#visit">Book a table</a><a href="tel:+919665060568">096650 60568</a></div>
     </div>
   </div>
   <div class="wordmark" id="wordmark"><span class="o">DG CAFE</span><span class="f" id="wmFill">DG CAFE</span></div>
@@ -827,6 +961,169 @@ function init3D(){
 /* hero category chips -> menu tab */
 $$(".chip").forEach(c=>c.onclick=()=>{renderMenu(c.dataset.cat);const m=$("#menu");lenis?lenis.scrollTo(m,{offset:-70,duration:1.4}):m.scrollIntoView({behavior:"smooth"})});
 
+/* ---------- DG HOME STAY ---------- */
+// Owner to confirm: these perks are placeholders until DG confirms what the rooms include.
+const STAY={perks:[["❄️","Air-conditioned rooms"],["📶","Free Wi-Fi"],["🚿","Hot water"],["🅿️","Free parking"],["👨‍👩‍👧","Family friendly"],["☕","Coffee & food at DG Cafe"]]};
+$("#perks").innerHTML=STAY.perks.map(([i,t])=>`<div class="perk"><i>${i}</i>${t}</div>`).join("");
+
+/* booking card -> WhatsApp */
+(function(){
+  const f=$("#stayForm"),inp=f.querySelector("[name=in]"),out=f.querySelector("[name=out]");let guests=2,room="Couple";
+  const today=new Date();const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  inp.min=iso(today);out.min=iso(new Date(today.getTime()+864e5));
+  const fmt=v=>new Date(v+"T00:00").toLocaleDateString("en-IN",{day:"numeric",month:"short"});
+  function nights(){if(!inp.value||!out.value)return 0;return Math.round((new Date(out.value)-new Date(inp.value))/864e5)}
+  function upd(){const n=nights();
+    $("#sumTxt").textContent=inp.value&&out.value&&n>0?`${fmt(inp.value)} → ${fmt(out.value)} · ${guests} guest${guests>1?"s":""} · ${room}`:`${guests} guest${guests>1?"s":""} · ${room} · select dates`;
+    $("#sumN").textContent=n>0?`${n} night${n>1?"s":""}`:"—";$("#gCount").textContent=guests;$("#sbErr").style.display="none"}
+  inp.addEventListener("change",()=>{if(inp.value){const nx=new Date(new Date(inp.value).getTime()+864e5);out.min=iso(nx);if(!out.value||out.value<=inp.value)out.value=iso(nx)}upd()});
+  out.addEventListener("change",upd);
+  $("#gMinus").onclick=()=>{guests=Math.max(1,guests-1);upd()};$("#gPlus").onclick=()=>{guests=Math.min(20,guests+1);upd()};
+  $$("#rtype button").forEach(b=>b.onclick=()=>{$$("#rtype button").forEach(x=>x.classList.toggle("on",x===b));room=b.dataset.v;
+    if(room==="Family"&&guests<3)guests=3;if(room==="Group"&&guests<5)guests=5;if(room==="Couple")guests=2;upd()});
+  f.addEventListener("submit",e=>{e.preventDefault();
+    if(!inp.value||!out.value||nights()<1){$("#sbErr").style.display="block";return}
+    const name=f.querySelector("[name=name]").value.trim();
+    const msg=`Hi DG Home Stay! I'd like to check room availability.\nCheck-in: ${fmt(inp.value)}\nCheck-out: ${fmt(out.value)} (${nights()} night${nights()>1?"s":""})\nGuests: ${guests} (${room})${name?`\nName: ${name}`:""}\nPlease share availability and rates.`;
+    window.open("https://wa.me/919665060568?text="+encodeURIComponent(msg),"_blank","noopener");
+  });
+  upd();
+})();
+
+/* magnetic buttons */
+$$(".mag").forEach(b=>{
+  b.addEventListener("pointermove",e=>{if(innerWidth<900)return;const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*.18}px,${(e.clientY-r.top-r.height/2)*.28}px)`});
+  b.addEventListener("pointerleave",()=>b.style.transform="");
+});
+
+/* 3D room: day -> night as you scroll */
+const STAYS={p:0,night:0,ang:0};
+function initStay3D(){
+  if(!has3)return;
+  const cv=$("#stayGl"),pin=$("#stayPin");
+  const R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+  R.setPixelRatio(Math.min(devicePixelRatio,2));R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1.05;
+  R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+  const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(30,1,.1,100);
+  const M=(c,r=.7,m=0,e)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m,...(e||{})});
+  const box=(w,h,d,mat,x,y,z,sh=true)=>{const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=sh;m.receiveShadow=true;sc.add(m);return m};
+  const tex=(w,h,draw)=>{const c=document.createElement("canvas");c.width=w;c.height=h;draw(c.getContext("2d"),w,h);const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;t.anisotropy=4;return t};
+
+  // floor planks
+  const floorT=tex(512,512,(g,w,h)=>{g.fillStyle="#a8703f";g.fillRect(0,0,w,h);for(let i=0;i<8;i++){const y=i*64;g.fillStyle=`hsl(26,${45+Math.random()*10}%,${36+Math.random()*8}%)`;g.fillRect(0,y,w,62);
+    g.fillStyle="rgba(0,0,0,.25)";g.fillRect(0,y+62,w,2);const o=Math.random()*w;g.fillRect(o,y,2,62);for(let k=0;k<14;k++){g.fillStyle="rgba(60,30,10,.08)";g.fillRect(Math.random()*w,y+Math.random()*60,80+Math.random()*120,1)}}});
+  floorT.wrapS=floorT.wrapT=THREE.RepeatWrapping;floorT.repeat.set(1.5,1.5);
+  box(6.4,.35,6.4,M(0x141417,.6),0,-.2,0,false);
+  const floor=box(6,.05,6,M(0xffffff,.55,0,{map:floorT}),0,0,0,false);
+  // walls
+  const wallMat=M(0xefe3d0,.9);box(6,3.6,.16,wallMat,0,1.8,-3.08,false);
+  box(.16,3.6,6,M(0xdba77d,.9),-3.08,1.8,0,false);
+  box(6,.12,.2,M(0x6b4429,.6),0,.06,-2.95,false);box(.2,.12,6,M(0x6b4429,.6),-2.95,.06,0,false); // skirting
+  // window with day + night views
+  const view=night=>tex(512,448,(g,w,h)=>{
+    const gr=g.createLinearGradient(0,0,0,h);
+    if(night){gr.addColorStop(0,"#0b1233");gr.addColorStop(1,"#26386e")}else{gr.addColorStop(0,"#7ec3ee");gr.addColorStop(.7,"#cfe9f5");gr.addColorStop(1,"#fbe3b8")}
+    g.fillStyle=gr;g.fillRect(0,0,w,h);
+    if(night){for(let i=0;i<70;i++){g.fillStyle=`rgba(255,255,255,${Math.random()*.9})`;g.fillRect(Math.random()*w,Math.random()*h*.6,1.6,1.6)}
+      g.fillStyle="#f4f1ec";g.beginPath();g.arc(370,96,34,0,7);g.fill();g.fillStyle="#26386e";g.beginPath();g.arc(386,86,30,0,7);g.fill()}
+    else{g.fillStyle="#fff6d6";g.beginPath();g.arc(380,96,40,0,7);g.fill()}
+    g.fillStyle=night?"#0d1a2a":"#3f7a4a";g.beginPath();g.moveTo(0,h*.72);for(let x=0;x<=w;x+=32)g.lineTo(x,h*.66+Math.sin(x/60)*18);g.lineTo(w,h);g.lineTo(0,h);g.fill();
+    g.fillStyle=night?"#050a12":"#24502e";
+    [[90,.95],[300,.9],[460,1]].forEach(([x,s])=>{g.fillRect(x-3,h*.42*s+40,6,h);for(let k=0;k<7;k++){g.save();g.translate(x,h*.42*s+40);g.rotate(-1.4+k*.45);g.beginPath();g.ellipse(36,0,40,7,0,0,7);g.fill();g.restore()}});
+  });
+  const wx=1.2,wy=2,ww=1.7,wh=1.45;
+  const dayV=new THREE.Mesh(new THREE.PlaneGeometry(ww,wh),new THREE.MeshBasicMaterial({map:view(false),toneMapped:false}));dayV.position.set(wx,wy,-2.995);sc.add(dayV);
+  const nightMat=new THREE.MeshBasicMaterial({map:view(true),transparent:true,opacity:0,toneMapped:false});
+  const nightV=new THREE.Mesh(new THREE.PlaneGeometry(ww,wh),nightMat);nightV.position.set(wx,wy,-2.99);sc.add(nightV);
+  const frameM=M(0xf7f3ec,.5);
+  box(ww+.16,.08,.1,frameM,wx,wy+wh/2+.04,-2.95,false);box(ww+.16,.1,.18,frameM,wx,wy-wh/2-.05,-2.92,false);
+  box(.08,wh,.1,frameM,wx-ww/2-.04,wy,-2.95,false);box(.08,wh,.1,frameM,wx+ww/2+.04,wy,-2.95,false);
+  box(.05,wh,.06,frameM,wx,wy,-2.96,false);box(ww,.05,.06,frameM,wx,wy+.12,-2.96,false);
+  const curtM=M(0xf7941d,.95);const cl=box(.32,1.9,.08,curtM,wx-ww/2-.28,2.05,-2.9),cr=box(.32,1.9,.08,curtM,wx+ww/2+.28,2.05,-2.9);
+  box(ww+1.2,.04,.04,M(0x2a2a2e,.4,.6),wx,3.02,-2.9,false);
+  // wall art: DG logo
+  const artT=tex(256,256,(g,w,h)=>{g.fillStyle="#141417";g.fillRect(0,0,w,h);g.fillStyle="#fff";g.beginPath();g.arc(128,128,78,0,7);g.fill();g.lineWidth=12;g.strokeStyle="#f7941d";g.stroke();
+    g.fillStyle="#111";g.font="600 64px Montserrat, Arial";g.textAlign="center";g.fillText("DG",128,140);g.font="500 16px Montserrat, Arial";g.fillText("HOME STAY",128,170)});
+  const art=new THREE.Mesh(new THREE.BoxGeometry(.06,.95,.95),[M(0x6b4429),M(0x6b4429),M(0x6b4429),M(0x6b4429),new THREE.MeshStandardMaterial({map:artT,roughness:.5}),M(0x6b4429)]);
+  art.material[0]=new THREE.MeshStandardMaterial({map:artT,roughness:.5});art.position.set(-2.98,2.15,-.9);sc.add(art);
+  // bed
+  const wood=M(0x6b4429,.55),bx=-.9;
+  box(2.7,1.25,.14,wood,bx,.85,-2.93);
+  box(2.5,.34,3,wood,bx,.22,-1.45);
+  box(2.4,.3,2.9,M(0xf7f3ec,.85),bx,.54,-1.45);
+  box(2.46,.09,1.85,M(0xf7941d,.8),bx,.72,-.88);
+  box(2.47,.1,.32,M(0xf2e6d4,.85),bx,.73,-1.86);
+  const pil=new THREE.SphereGeometry(1,24,16);
+  [[bx-.58],[bx+.58]].forEach(([x])=>{const p=new THREE.Mesh(pil,M(0xffffff,.9));p.scale.set(.48,.13,.27);p.position.set(x,.82,-2.5);p.rotation.x=-.25;p.castShadow=true;sc.add(p)});
+  const cush=new THREE.Mesh(pil,M(0x1c2a3a,.9));cush.scale.set(.22,.16,.08);cush.position.set(bx,.86,-2.28);cush.rotation.x=-.4;sc.add(cush);
+  // nightstand + lamp + coffee
+  box(.62,.62,.5,wood,1.0,.31,-2.62);box(.5,.02,.01,M(0xf7941d,.4,.5),1.0,.42,-2.36,false);
+  box(.2,.04,.2,M(0x1a1a1e,.4,.4),1.0,.64,-2.62);
+  const stem=new THREE.Mesh(new THREE.CylinderGeometry(.02,.02,.36,8),M(0x2a2a2e,.4,.6));stem.position.set(1.0,.82,-2.62);sc.add(stem);
+  const shadeM=new THREE.MeshStandardMaterial({color:0xf5ead8,roughness:.8,emissive:0xffb35c,emissiveIntensity:0,side:THREE.DoubleSide});
+  const shade=new THREE.Mesh(new THREE.CylinderGeometry(.15,.24,.3,24,1,true),shadeM);shade.position.set(1.0,1.08,-2.62);sc.add(shade);
+  const lamp=new THREE.PointLight(0xffb35c,0,6,2);lamp.position.set(1.0,1.02,-2.55);sc.add(lamp);
+  const cup=new THREE.Mesh(new THREE.CylinderGeometry(.06,.05,.1,16),M(0xffffff,.3));cup.position.set(.82,.67,-2.48);sc.add(cup);
+  // rug
+  const rugT=tex(256,256,(g,w,h)=>{g.fillStyle="#2b2b30";g.fillRect(0,0,w,h);g.strokeStyle="#f7941d";g.lineWidth=6;g.beginPath();g.arc(128,128,110,0,7);g.stroke();g.strokeStyle="rgba(244,241,236,.5)";g.lineWidth=3;g.beginPath();g.arc(128,128,92,0,7);g.stroke()});
+  const rug=new THREE.Mesh(new THREE.CircleGeometry(1.5,48),M(0xffffff,.95,0,{map:rugT}));rug.rotation.x=-Math.PI/2;rug.scale.y=.75;rug.position.set(.6,.03,.95);rug.receiveShadow=true;sc.add(rug);
+  // armchair
+  const chairM=M(0x2b4a5a,.85);box(.9,.32,.85,chairM,1.9,.3,.9);box(.9,.6,.18,chairM,1.9,.68,.52);box(.16,.4,.85,chairM,1.47,.54,.9);box(.16,.4,.85,chairM,2.33,.54,.9);
+  // suitcase
+  box(.55,.75,.24,M(0xc9772b,.5),-.2,.42,1.6);box(.22,.04,.04,M(0x1a1a1e,.4,.5),-.2,.83,1.6);
+  // plant
+  const pot=new THREE.Mesh(new THREE.CylinderGeometry(.22,.17,.42,20),M(0xb5683a,.8));pot.position.set(2.5,.21,-2.5);pot.castShadow=true;sc.add(pot);
+  const leafM=M(0x3f7a4a,.6);for(let i=0;i<9;i++){const l=new THREE.Mesh(new THREE.SphereGeometry(.2,12,8),leafM);l.scale.set(.25,1,.5);const a=i/9*Math.PI*2;l.position.set(2.5+Math.cos(a)*.14,.75+Math.random()*.25,-2.5+Math.sin(a)*.14);l.rotation.set(Math.cos(a)*.5,a,Math.sin(a)*.5);l.castShadow=true;sc.add(l)}
+  // DG geometric pendant
+  const pend=new THREE.Group();const edges=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.OctahedronGeometry(.22)),new THREE.LineBasicMaterial({color:0xf7941d}));pend.add(edges);
+  const bulbM=new THREE.MeshStandardMaterial({color:0xfff1d0,emissive:0xffc070,emissiveIntensity:.2});const bulb=new THREE.Mesh(new THREE.SphereGeometry(.07,16,12),bulbM);pend.add(bulb);
+  const wire=new THREE.Mesh(new THREE.CylinderGeometry(.006,.006,1.3,4),M(0x111111));wire.position.y=.8;pend.add(wire);pend.position.set(.9,2.8,-.6);sc.add(pend);
+  const pendL=new THREE.PointLight(0xffc070,0,7,2);pendL.position.copy(pend.position);sc.add(pendL);
+  // lights
+  const hemi=new THREE.HemisphereLight(0xfff1dc,0x3a2a1e,.65);sc.add(hemi);
+  const sun=new THREE.DirectionalLight(0xffe2b0,2.2);sun.position.set(4,7,-9);sun.target.position.set(0,0,0);sc.add(sun,sun.target);
+  sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);Object.assign(sun.shadow.camera,{left:-5,right:5,top:5,bottom:-5,near:1,far:25});sun.shadow.bias=-.0008;sun.shadow.radius=4;
+  const fill=new THREE.DirectionalLight(0xffffff,.5);fill.position.set(6,5,8);sc.add(fill);
+  const moon=new THREE.DirectionalLight(0x8ea4ff,0);moon.position.set(4,6,-8);sc.add(moon);
+  // window light beam
+  const beamM=new THREE.MeshBasicMaterial({color:0xffe6b0,transparent:true,opacity:.12,depthWrite:false,blending:THREE.AdditiveBlending,side:THREE.DoubleSide});
+  const beam=new THREE.Mesh(new THREE.PlaneGeometry(1.7,3.2),beamM);beam.position.set(wx-.2,1.2,-1.6);beam.rotation.set(-1.0,0,.12);sc.add(beam);
+
+  const lerp=(a,b,t)=>a+(b-a)*t,cA=new THREE.Color(),cDay=new THREE.Color(0xfff1dc),cNight=new THREE.Color(0x5a6aa8);
+  function resize(){const w=cv.clientWidth,h=cv.clientHeight;if(!w||!h)return;R.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix()}
+  resize();addEventListener("resize",resize);
+  let vis=false,t=0;new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis)resize()},{rootMargin:"100px"}).observe(pin);
+  (function loop(){requestAnimationFrame(loop);if(!vis)return;t+=.016;
+    const n=STAYS.night,p=STAYS.p,mob=innerWidth<900;
+    // lighting day -> night
+    sun.intensity=lerp(2.2,0,Math.min(1,n*1.4));hemi.intensity=lerp(.65,.18,n);cA.copy(cDay).lerp(cNight,n);hemi.color.copy(cA);
+    fill.intensity=lerp(.5,.06,n);moon.intensity=lerp(0,.35,n);nightMat.opacity=n;beamM.opacity=.12*(1-n)+.05*n;beamM.color.setHex(n>.5?0x8ea4ff:0xffe6b0);
+    const on=Math.max(0,(n-.45)/.55);lamp.intensity=on*1.8;pendL.intensity=on*1.3;shadeM.emissiveIntensity=on*1.4;bulbM.emissiveIntensity=.2+on*2.5;
+    R.toneMappingExposure=lerp(1.05,1.25,n);
+    cl.rotation.y=Math.sin(t*1.3)*.04;cr.rotation.y=Math.sin(t*1.1+1)*.04;pend.rotation.y=t*.3;
+    // camera orbit
+    const az=lerp(.75,-.25,p)+mouse.x*.12,el=lerp(.5,.36,p)-mouse.y*.06,dist=mob?15.5:12.6;
+    const tx=mob?0:.2,ty=1.15,tz=-.4;
+    cam.position.set(tx+Math.sin(az)*dist*Math.cos(el),ty+Math.sin(el)*dist,tz+Math.cos(az)*dist*Math.cos(el));cam.lookAt(tx,ty,tz);
+    R.render(sc,cam);
+  })();
+}
+function stayMotion(){
+  if(!hasG)return;
+  const steps=$$(".step"),bars=$$("#stayProg i b"),clk=$("#stayClock"),pin=$("#stayPin");
+  let cur=0;
+  ScrollTrigger.create({trigger:"#stayPin",start:"top top",end:"+=220%",pin:true,scrub:true,onUpdate:s=>{
+    const p=s.progress;STAYS.p=p;STAYS.night=Math.min(1,Math.max(0,(p-.42)/.48));pin.style.setProperty("--night",STAYS.night.toFixed(3));
+    const i=Math.min(2,Math.floor(p*3));if(i!==cur){steps[cur].classList.remove("on");steps[i].classList.add("on");cur=i}
+    bars.forEach((b,k)=>b.style.setProperty("--f",Math.min(1,Math.max(0,p*3-k)).toFixed(3)));
+    const hrs=8+14*Math.min(1,p*1.05),h=Math.floor(hrs),m=Math.floor((hrs-h)*60/15)*15,h12=((h+11)%12)+1;
+    $("#clockT").textContent=`${h12}:${String(m).padStart(2,"0")} ${h<12?"AM":"PM"}`;
+    $("#clockL").textContent=h<12?"Morning":h<16?"Afternoon":h<19?"Evening":"Night";clk.classList.toggle("night",h>=19);
+  }});
+  gsap.from(".stay-h,.stay-copy .kicker",{y:60,opacity:0,duration:1.1,stagger:.08,ease:"expo.out",scrollTrigger:{trigger:"#stay",start:"top 70%"}});
+  gsap.from(".perk",{y:30,opacity:0,stagger:.06,duration:.8,ease:"power3.out",scrollTrigger:{trigger:"#perks",start:"top 85%"}});
+}
+
 /* ---------- testimonials slider ---------- */
 const slides=$$(".slide");let si=0,stl=null;
 slides.forEach(s=>{const q=document.createElement("q");q.innerHTML=s.dataset.q.split(" ").map(w=>`<span class="w"><span>${esc(w)}</span></span>`).join(" ");s.prepend(q)});
@@ -886,6 +1183,8 @@ function initMotion(){
     $$(".gi img").forEach(im=>gsap.fromTo(im,{scale:1.18},{scale:1,ease:"none",scrollTrigger:{trigger:"#inside",start:"top top",end:"+=1500",scrub:true}}));
   }
 
+  stayMotion();
+
   // counters
   $$("[data-count]").forEach(el=>{const n=+el.dataset.count,o={v:0};
     gsap.to(o,{v:n,duration:2,ease:"power2.out",scrollTrigger:{trigger:el,start:"top 90%"},onUpdate:()=>el.textContent=Math.round(o.v)})});
@@ -908,14 +1207,14 @@ function initMotion(){
     if(hasG)gsap.to("#loader",{yPercent:-100,duration:1,ease:"expo.inOut",onComplete:()=>$("#loader").remove()});else $("#loader").remove();
     initMotion();
   }
-  init3D();
+  init3D();initStay3D();
 })();
 
 /* ---------- Priya chat ---------- */
 let sample=null,chist=[],cbusy=false,greeted=false;
 (async()=>{try{if(window.claude&&window.claude.use)sample=await window.claude.use("sample")}catch(e){sample=null}})();
 const PROMPT=`You are Priya, the friendly website assistant for DG Cafe & Resto, Chiplun.
-FACTS (only these): Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605. Phone/WhatsApp 096650 60568. Open 11 AM–11 PM daily (holiday hours may vary). About ₹400 for two. Ample parking, music, family-friendly, delivery on Zomato. Dessert counter with pastries, tarts and dessert cups.
+FACTS (only these): Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605. Phone/WhatsApp 096650 60568. Open 11 AM–11 PM daily (holiday hours may vary). About ₹400 for two. Ample parking, music, family-friendly, delivery on Zomato. Dessert counter with pastries, tarts and dessert cups. DG also runs DG Home Stay (rooms in Chiplun): for availability, room types and rates, guests should use the "Check availability" form in the Home Stay section or WhatsApp 096650 60568; never quote room prices or amenities.
 Menu with prices: ${Object.values(MENU).flat().filter(x=>x[1]).map(x=>x[0]+" ₹"+x[1]).join(", ")}.
 Also on menu (price: ask staff): ${Object.values(MENU).flat().filter(x=>!x[1]).map(x=>x[0]).join(", ")}. Also North Indian, Chinese, biryani, kebabs.
 Rules: reply in the customer's language (Marathi, Hindi, English, Hinglish). 1–3 short sentences, at most one emoji. Never invent prices or offers. For table bookings, point them to the "Reserve a table" form on this page or WhatsApp 096650 60568.`;
@@ -931,6 +1230,7 @@ function fb(q){const t=q.toLowerCase(),h=(...k)=>k.some(x=>t.includes(x));
   if(h("pizza"))return MENU.Pizza.filter(x=>x[1]).map(x=>`${x[0]} ₹${x[1]}`).join("\n");
   if(h("time","open","close","baje","वाजे","बजे","किती"))return "We're open every day, 11 AM to 11 PM 😊";
   if(h("dessert","brownie","sweet","pastry","truffle"))return "Try the Dutch Truffle Pastry (₹80) or the Sizzling Brownie (₹169)!";
+  if(h("room","stay","homestay","home stay","रूम","राहण्या","ठहर"))return "Yes! DG Home Stay has rooms in Chiplun. Use the Check availability form in the Home Stay section or WhatsApp 096650 60568 for availability and rates.";
   if(h("park","पार्किंग"))return "Yes, there's ample parking right at Dhaval Plaza.";
   if(h("book","table","टेबल"))return "Use the Reserve a table form on this page, or WhatsApp us on 096650 60568.";
   if(h("where","address","kaha","पत्ता","कुठे"))return "Dhaval Plaza, near Chiplun Nagar Parishad, Swara Vihar, Chiplun 415605.";

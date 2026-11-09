@@ -23,6 +23,7 @@ FACTS (use only these; never invent anything):
 - Hours: 11 AM to 11 PM every day (holiday hours may vary)
 - About ₹400 for two. Ample parking. Lively music, neon-lit interiors, family-friendly. Delivery via Zomato.
 - Dessert counter with pastries, tarts and dessert cups.
+- DG also runs DG Home Stay: home stay rooms in Chiplun. For availability, room types and rates, guests should use the "Check availability" form in the Home Stay section of this website or WhatsApp 096650 60568. Never quote room prices or room amenities.
 - Menu with prices: ${priced}.
 - Also on the menu (price: ask our team): ${unpriced}. Also North Indian, Chinese, biryani and kebabs.
 
